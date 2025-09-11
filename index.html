@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Emoji Charades — Movies</title>
+<style>
+  :root{
+    --bg1:#0d1024; --bg2:#2a3570; --bg3:#6a39b8; --bg4:#293a8f;
+    --glass:rgba(255,255,255,.12); --glass2:rgba(255,255,255,.18);
+    --text:#ffffff; --accent:#ffd400; --chip:#2c356e; --chipBorder:rgba(255,255,255,.28);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif;
+    color:var(--text);
+    background:
+      radial-gradient(1200px 700px at 50% -250px, rgba(140,80,255,.24), transparent),
+      linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 35%, var(--bg4) 65%, var(--bg3) 100%);
+    -webkit-tap-highlight-color:transparent;
+    overflow-x:hidden;
+  }
+
+  #edgeLights{position:fixed; inset:0; pointer-events:none; z-index:1}
+
+  .windows{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    display:grid; grid-template-columns:repeat(10,1fr); gap:10px;
+    padding:22px; opacity:.27;
+  }
+  .win{
+    border-radius:12px;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05)),
+      radial-gradient(120% 100% at 20% 10%, rgba(255,255,255,.07), transparent 60%);
+    border:1px solid rgba(255,255,255,.14);
+    position:relative; overflow:hidden;
+    backdrop-filter:blur(2px);
+  }
+  .win::after{
+    content: attr(data-e);
+    position:absolute; inset:0; display:grid; place-items:center;
+    font-size:clamp(10px, 3vmin, 26px);
+    opacity:.0; animation:peek 6s linear infinite;
+  }
+  @keyframes peek{0%,70%{opacity:0;transform:scale(.9)}75%,90%{opacity:.8;transform:scale(1)}100%{opacity:0;transform:scale(.95)}}
+
+  .wrap{
+    position:relative; z-index:2;
+    min-height:100%;
+    display:grid; grid-template-rows:auto auto 1fr auto;
+    gap:12px; padding:16px; max-width:1100px; margin:0 auto;
+  }
+
+  header{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; text-align:center}
+  h1{
+    font-weight:900; letter-spacing:.3px; font-size:clamp(26px,5vmin,44px); color:var(--accent);
+    text-shadow:0 1px 0 rgba(0,0,0,.35),0 2px 0 rgba(0,0,0,.25),0 0 12px rgba(255,212,0,.45),0 0 24px rgba(255,212,0,.35);
+  }
+  .ctrl-right{display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap}
+  .pill{
+    padding:8px 12px; border-radius:999px; border:1px solid rgba(255,255,255,.25);
+    background:var(--glass); font-weight:700; cursor:pointer; color:#fff;
+    transition:transform .08s ease, filter .15s ease;
+  }
+  .pill:hover{filter:brightness(1.08)} .pill:active{transform:translateY(1px) scale(.99)}
+
+  .chips{display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:center; margin-top:-2px; padding:2px 0 4px}
+  .chip{display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; background:var(--chip); border:1px solid var(--chipBorder); font-weight:800; font-size:14px}
+  .chip button{appearance:none; border:0; width:20px; height:20px; border-radius:999px; display:grid; place-items:center; background:rgba(255,255,255,.15); color:#fff; cursor:pointer}
+
+  main{display:grid; grid-template-columns:1fr; gap:14px;}
+  .board{
+    display:grid; gap:14px; background:var(--glass); border:1px solid rgba(255,255,255,.25);
+    border-radius:18px; padding:16px; backdrop-filter:blur(10px);
+    box-shadow:0 12px 40px rgba(0,0,0,.28), 0 0 0 1px rgba(255,255,255,.06) inset;
+  }
+  .toprow{display:grid; grid-template-columns:1fr auto 1fr; align-items:center}
+  .center{display:flex; align-items:center; justify-content:center}
+
+  /* Smaller counter & timer */
+  .timer{
+    min-width:120px; text-align:center; font-weight:900; font-size:clamp(14px,3.2vmin,22px);
+    padding:6px 10px; border-radius:10px; border:1px solid rgba(255,255,255,.25); background:var(--glass2);
+    box-shadow:0 4px 12px rgba(0,0,0,.18);
+  }
+  .tag{
+    padding:6px 10px; border-radius:10px; font-weight:800; font-size:clamp(12px,2.8vmin,18px);
+    border:1px solid rgba(255,255,255,.25); background:var(--glass2); box-shadow:0 4px 12px rgba(0,0,0,.15)
+  }
+  .category{text-align:center; color:var(--accent); font-weight:900; letter-spacing:.4px; font-size:clamp(18px,4vmin,30px); text-shadow:0 2px 10px rgba(0,0,0,.45)}
+
+  .emoji{font-size:clamp(54px,12.5vmin,120px); line-height:1.1; text-align:center; white-space:pre-wrap; text-shadow:0 5px 16px rgba(0,0,0,.5); padding:10px 8px}
+
+  .clapperWrap{display:grid; place-items:center; min-height:120px}
+  .clapper{
+    position:relative; width:min(780px,92%); border-radius:14px; background:linear-gradient(180deg,rgba(0,0,0,.78),rgba(0,0,0,.60));
+    border:1px solid rgba(255,255,255,.25);
+    box-shadow:0 14px 40px rgba(0,0,0,.35), 0 0 12px rgba(99,247,255,.25), 0 0 22px rgba(166,255,143,.18);
+    transform:translateY(8px); opacity:0; transition:opacity .3s ease, transform .3s ease;
+  }
+  .clapper.show{opacity:1; transform:translateY(0)}
+  .clap-top{position:absolute; left:0; right:0; top:-40px; height:40px; background:repeating-linear-gradient(135deg,#fff 0 18px,#111 18px 36px); border-radius:8px 8px 0 0; transform-origin:left bottom; transform:rotate(-28deg); box-shadow:0 10px 20px rgba(0,0,0,.4); animation:clack .55s ease-out forwards}
+  @keyframes clack{0%{transform:rotate(-28deg)}100%{transform:rotate(-4deg)}}
+  .clap-body{padding:18px 16px; text-align:center}
+  .movieTitle{color:var(--accent); font-weight:900; letter-spacing:.4px; font-size:clamp(20px,4.8vmin,36px); text-shadow:0 3px 12px rgba(255,212,0,.55)}
+
+  .controls{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:4px}
+  .controls .pill{min-width:150px; text-align:center}
+
+  footer{opacity:.9; font-size:14px; text-align:center; padding-bottom:8px}
+
+  /* Modals */
+  #rulesModal,#catsModal{position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; align-items:center; justify-content:center; z-index:9}
+  .modal-card{
+    width:min(720px,92vw); max-height:82vh; overflow:auto; background:linear-gradient(135deg,rgba(60,60,90,.95),rgba(30,30,55,.95));
+    border-radius:16px; border:1px solid rgba(255,255,255,.25); padding:18px 20px; box-shadow:0 20px 50px rgba(0,0,0,.55)
+  }
+  .cats-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin:10px 0 6px}
+  .cat-item{display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:12px; background:var(--glass2); border:1px solid rgba(255,255,255,.25)}
+  .modal-actions{display:flex; gap:10px; justify-content:flex-end; margin-top:12px}
+  .rules-card ul{margin-left:18px; line-height:1.45}
+  .limits{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; justify-content:center}
+  .limit-pill{display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; cursor:pointer; background:var(--glass2); border:1px solid rgba(255,255,255,.3); font-weight:800}
+  .limit-pill input{accent-color:#ffd400}
+  .tools-row{display:flex; gap:8px; flex-wrap:wrap; margin:8px 0 2px; justify-content:center}
+  .subtle{opacity:.8; font-size:14px; text-align:center}
+  @media (max-width:640px){ .controls .pill{min-width:140px} .cats-grid{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+  <canvas id="edgeLights"></canvas>
+  <div class="windows" aria-hidden="true"></div>
+
+  <div class="wrap">
+    <header>
+      <h1>Emoji Charades — Movies</h1>
+      <div class="ctrl-right">
+        <div class="pill">Space: Reveal • Double-Space: Next</div>
+        <button id="musicBtn" class="pill">Music: On</button>
+        <button id="shuffleBtn" class="pill">Shuffle</button>
+        <button id="catsBtn" class="pill">Categories & Rounds</button>
+        <button id="rulesBtn" class="pill">Rules</button>
+      </div>
+    </header>
+
+    <div id="activeCats" class="chips" aria-label="Active categories"></div>
+
+    <main>
+      <section class="board" aria-live="polite">
+        <div class="toprow">
+          <div class="metaL"><div id="progress" class="tag">1 / 150</div></div>
+          <div class="center"><div id="category" class="category">Category: —</div></div>
+          <div class="metaR"><div id="clock" class="timer">⏱️ 12s</div></div>
+        </div>
+
+        <div id="emoji" class="emoji">🎬😀</div>
+
+        <div class="clapperWrap">
+          <div id="clapper" class="clapper" aria-hidden="true">
+            <div class="clap-top"></div>
+            <div class="clap-body"><div id="movieTitle" class="movieTitle">—</div></div>
+          </div>
+        </div>
+
+        <div class="controls">
+          <button id="reveal"  class="pill">Reveal Answer</button>
+          <button id="nextBtn" class="pill">Next</button>
+          <button id="skip"    class="pill">Skip</button>
+          <button id="restart" class="pill">Restart</button>
+        </div>
+      </section>
+    </main>
+
+    <footer>Family-friendly • Projector & Mobile ready • English • Hindi • Kannada • Telugu • Malayalam • Tamil</footer>
+  </div>
+
+  <!-- Rules modal -->
+  <div id="rulesModal">
+    <div class="modal-card rules-card">
+      <h3>Emoji Charades — Quick Rules</h3>
+      <ul>
+        <li>Each round shows emojis for a <b>popular movie</b>. Category shown: <b>English movie, Hindi movie, Kannada movie, Telugu movie, Malayalam movie, Tamil movie</b>.</li>
+        <li>You have <b>12 seconds</b> per puzzle.</li>
+        <li><b>Space</b> = Reveal the answer. <b>Double-Space</b> quickly = Next puzzle.</li>
+        <li>Use <b>Categories & Rounds</b> to choose languages and a round limit (10/20/30/50).</li>
+      </ul>
+      <div class="modal-actions">
+        <button id="rulesClose" class="pill rules-close">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Categories & Rounds modal (opens first on load) -->
+  <div id="catsModal">
+    <div class="modal-card">
+      <h3 style="text-align:center">Choose Categories & Rounds</h3>
+      <div class="tools-row">
+        <button id="catsAll"  class="pill">Select all</button>
+        <button id="catsNone" class="pill">Clear all</button>
+      </div>
+      <div class="cats-grid" id="catsGrid"></div>
+
+      <p class="subtle" style="margin-top:6px">Rounds (how many movies to play this session):</p>
+      <div class="limits">
+        <label class="limit-pill"><input type="radio" name="limit" value="10"> 10</label>
+        <label class="limit-pill"><input type="radio" name="limit" value="20"> 20</label>
+        <label class="limit-pill"><input type="radio" name="limit" value="30"> 30</label>
+        <label class="limit-pill"><input type="radio" name="limit" value="50"> 50</label>
+      </div>
+
+      <div class="modal-actions">
+        <button id="catsCancel" class="pill">Cancel</button>
+        <button id="catsApply" class="pill">Apply & Start</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* ========= Movies (starter set, extend as you like) ========= */
+const MOVIES = [
+  /* Hindi */
+  {t:"3 Idiots", e:"🎓🧠🤪👨‍🎓", c:"Hindi movie"},
+  {t:"Dangal", e:"🥇🤼‍♀️👨‍👧‍👧", c:"Hindi movie"},
+  {t:"Pathaan", e:"🕶️🛩️❄️💥", c:"Hindi movie"},
+  {t:"Jawan", e:"🛤️🕶️🎭💥", c:"Hindi movie"},
+  {t:"Brahmāstra", e:"🔥🪄🔱🌌", c:"Hindi movie"},
+  {t:"Gully Boy", e:"🎤🧢🚇🔥", c:"Hindi movie"},
+  /* English */
+  {t:"Oppenheimer", e:"🔬☢️🕶️💥", c:"English movie"},
+  {t:"Barbie", e:"🎀👱‍♀️🏙️💖", c:"English movie"},
+  {t:"Dune: Part Two", e:"🏜️🐛👑⚔️", c:"English movie"},
+  {t:"Top Gun: Maverick", e:"✈️🕶️🔥🎖️", c:"English movie"},
+  {t:"Inside Out 2", e:"😀😢😠😨🤢🧠2️⃣", c:"English movie"},
+  /* Kannada */
+  {t:"Kantara", e:"🌾🛕🕺🔥", c:"Kannada movie"},
+  {t:"777 Charlie", e:"🐶🚗❤️", c:"Kannada movie"},
+  {t:"KGF Chapter 2", e:"⛏️👑💰⚔️", c:"Kannada movie"},
+  /* Telugu */
+  {t:"Kalki 2898 AD", e:"🤖🛕🌌⚔️", c:"Telugu movie"},
+  {t:"RRR (Tel)", e:"🤝🔥🌧️", c:"Telugu movie"},
+  {t:"Pushpa: The Rise", e:"🌲💼🧔‍♂️🕶️", c:"Telugu movie"},
+  /* Malayalam */
+  {t:"Manjummel Boys", e:"🕳️🧗‍♂️🧑‍🤝‍🧑", c:"Malayalam movie"},
+  {t:"2018", e:"🌧️🚤🤝🇮🇳", c:"Malayalam movie"},
+  {t:"Premam", e:"❤️🎓📖🍺", c:"Malayalam movie"},
+  /* Tamil */
+  {t:"Vikram (2022)", e:"🕶️🔫🧪", c:"Tamil movie"},
+  {t:"Jailer", e:"🗝️👑🧔‍♂️", c:"Tamil movie"},
+  {t:"Leo", e:"🧊🐯🗡️", c:"Tamil movie"},
+];
+
+/* ===== UI refs ===== */
+const emojiEl = document.getElementById('emoji');
+const categoryEl = document.getElementById('category');
+const progressEl = document.getElementById('progress');
+const clockEl = document.getElementById('clock');
+const clapper = document.getElementById('clapper');
+const titleEl = document.getElementById('movieTitle');
+
+const btnReveal = document.getElementById('reveal');
+const btnNext = document.getElementById('nextBtn');
+const btnSkip = document.getElementById('skip');
+const btnRestart = document.getElementById('restart');
+
+const rulesBtn = document.getElementById('rulesBtn');
+const rulesModal = document.getElementById('rulesModal');
+const rulesClose = document.getElementById('rulesClose');
+
+const musicBtn = document.getElementById('musicBtn');
+const shuffleBtn = document.getElementById('shuffleBtn');
+
+const catsBtn = document.getElementById('catsBtn');
+const catsModal = document.getElementById('catsModal');
+const catsApply = document.getElementById('catsApply');
+const catsCancel = document.getElementById('catsCancel');
+const catsAll = document.getElementById('catsAll');
+const catsNone = document.getElementById('catsNone');
+const catsGrid = document.getElementById('catsGrid');
+const activeCatsRow = document.getElementById('activeCats');
+
+/* ===== Helpers ===== */
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]] } return a }
+function uniq(a){ return Array.from(new Set(a)); }
+const ALL_CATS = ["English movie","Hindi movie","Kannada movie","Telugu movie","Malayalam movie","Tamil movie"];
+const LIMITS = [10,20,30,50];
+
+function getFilteredList(cats){ return MOVIES.filter(m=>cats.includes(m.c)); }
+
+/* ===== Persistent selections ===== */
+function loadSelectedCats(){
+  try{ const v=JSON.parse(localStorage.getItem('emojiCats')); if(Array.isArray(v)&&v.length) return uniq(v).filter(x=>ALL_CATS.includes(x)); }catch(e){}
+  return [...ALL_CATS];
+}
+function saveSelectedCats(cats){ localStorage.setItem('emojiCats', JSON.stringify(uniq(cats))); }
+function loadLimit(){ const v=parseInt(localStorage.getItem('emojiLimit'),10); return LIMITS.includes(v)?v:30; }
+function saveLimit(n){ localStorage.setItem('emojiLimit', String(n)); }
+
+/* ===== Background edge lights & windows ===== */
+const winLayer = document.querySelector('.windows');
+const BG_EMOJIS = ["🎬","🎟️","🎞️","🍿","⭐","🎵","🎭","🎥","✨","🪩","🎉","🎈"];
+for(let i=0;i<100;i++){ const d=document.createElement('div'); d.className='win'; d.setAttribute('data-e', BG_EMOJIS[i%BG_EMOJIS.length]); winLayer.appendChild(d); }
+const edge = document.getElementById('edgeLights'), ex = edge.getContext('2d');
+function drawEdge(t=0){
+  const dpr = devicePixelRatio||1;
+  edge.width=innerWidth*dpr; edge.height=innerHeight*dpr; edge.style.width='100vw'; edge.style.height='100vh'; ex.setTransform(dpr,0,0,dpr,0,0);
+  ex.clearRect(0,0,innerWidth,innerHeight);
+  const cols=['#ffd400','#63f7ff','#ff79b0','#a6ff8f','#ffd1ff'];
+  const bulb=(x,y,i)=>{ const pulse=(Math.sin(t/350+i)*.5+.5), r=4+pulse*2;
+    ex.save(); ex.globalAlpha=.85; ex.fillStyle=cols[i%cols.length]; ex.shadowColor=cols[i%cols.length]; ex.shadowBlur=16+pulse*14;
+    ex.beginPath(); ex.arc(x,y,r+2,0,Math.PI*2); ex.fill(); ex.restore();
+    ex.beginPath(); ex.fillStyle=cols[i%cols.length]; ex.arc(x,y,r,0,Math.PI*2); ex.fill();
+  };
+  const s=36; let i=0;
+  for(let x=8;x<innerWidth-8;x+=s){bulb(x,8,i++)} for(let x=8;x<innerWidth-8;x+=s){bulb(x,innerHeight-8,i++)}
+  for(let y=8;y<innerHeight-8;y+=s){bulb(8,y,i++)} for(let y=8;y<innerHeight-8;y+=s){bulb(innerWidth-8,y,i++)}
+  requestAnimationFrame(drawEdge);
+}
+requestAnimationFrame(drawEdge);
+
+/* ===== Audio: background + whoosh + SOFT CELEBRATION CLAPS ===== */
+let audioCtx, musicOn=true, musicLoop=null;
+function ensureAudio(){ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)(); }
+function startMusic(){
+  if(!musicOn || musicLoop) return; ensureAudio();
+  const master=audioCtx.createGain(); master.gain.value=.32; master.connect(audioCtx.destination);
+  const drum=audioCtx.createGain(); drum.gain.value=.24; drum.connect(master);
+  const bass=audioCtx.createGain(); bass.gain.value=.18; bass.connect(master);
+  const lead=audioCtx.createGain(); lead.gain.value=.10; lead.connect(master);
+  function kick(t){ const o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.type='sine'; o.connect(g).connect(drum);
+    o.frequency.setValueAtTime(120,t); o.frequency.exponentialRampToValueAtTime(50,t+.08);
+    g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(.9,t+.005); g.gain.exponentialRampToValueAtTime(.0001,t+.18);
+    o.start(t); o.stop(t+.2);
+  }
+  function snare(t){ const n=audioCtx.createBufferSource(); const len=audioCtx.sampleRate*.15;
+    const b=audioCtx.createBuffer(1,len,audioCtx.sampleRate), d=b.getChannelData(0);
+    for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2);
+    n.buffer=b; const g=audioCtx.createGain(); g.gain.value=.14; n.connect(g).connect(drum); n.start(t);
+  }
+  function hat(t){ const n=audioCtx.createBufferSource(); const len=audioCtx.sampleRate*.05;
+    const b=audioCtx.createBuffer(1,len,audioCtx.sampleRate), d=b.getChannelData(0);
+    for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,1.2);
+    n.buffer=b; const g=audioCtx.createGain(); g.gain.value=.05; n.connect(g).connect(drum); n.start(t);
+  }
+  function bassNote(semi,t,d=.25){ const o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.type='sawtooth'; o.frequency.value=55*Math.pow(2,semi/12);
+    o.connect(g).connect(bass); g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(.2,t+.01); g.gain.exponentialRampToValueAtTime(.0001,t+d);
+    o.start(t); o.stop(t+d+.02);
+  }
+  function leadNote(hz,t,d=.18){ const o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.type='triangle'; o.frequency.value=hz; o.connect(g).connect(lead);
+    g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(.09,t+.01); g.gain.exponentialRampToValueAtTime(.0001,t+d);
+    o.start(t); o.stop(t+d+.02);
+  }
+  const bpm=108, beat=60/bpm, start=audioCtx.currentTime+.05; const hz=n=>440*Math.pow(2,(n-69)/12);
+  function bar(t0){ kick(t0); hat(t0); snare(t0+beat); hat(t0+1.5*beat); kick(t0+2*beat); hat(t0+2.5*beat); snare(t0+3*beat); hat(t0+3.5*beat);
+    [0,0,-5,-5,2,2,0,0].forEach((st,i)=>bassNote(st,t0+i*.5*beat,.24));
+    [81,83,86,83,81,78,79,81].forEach((n,i)=>leadNote(hz(n),t0+i*.5*beat+.05,.16));
+  }
+  let t0=start; bar(t0); const barDur=4*beat; const id=setInterval(()=>{t0+=barDur; bar(t0)}, barDur*1000); musicLoop={id};
+}
+function stopMusic(){ if(musicLoop){clearInterval(musicLoop.id); musicLoop=null;} }
+document.addEventListener('click', function once(){ ensureAudio(); if(musicOn) startMusic(); document.removeEventListener('click', once); }, {once:true});
+musicBtn.addEventListener('click', ()=>{ musicOn=!musicOn; musicBtn.textContent='Music: '+(musicOn?'On':'Off'); if(musicOn) startMusic(); else stopMusic(); });
+
+function whoosh(){
+  ensureAudio();
+  const o=audioCtx.createOscillator(), g=audioCtx.createGain();
+  o.type='sine'; o.frequency.setValueAtTime(220,audioCtx.currentTime);
+  o.frequency.exponentialRampToValueAtTime(880,audioCtx.currentTime+.25);
+  g.gain.setValueAtTime(.0001,audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(.18,audioCtx.currentTime+.02);
+  g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.28);
+  o.connect(g).connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime+.3);
+}
+
+/* Soft celebration claps (gentle, non-harsh) */
+function celebration(){
+  ensureAudio();
+  const master = audioCtx.createGain();
+  master.gain.value = 0.26;
+  master.connect(audioCtx.destination);
+
+  // soft crowd bed (lowpassed noise)
+  const noise = audioCtx.createBufferSource();
+  const len = audioCtx.sampleRate * 1.0;
+  const buf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
+  const d = buf.getChannelData(0);
+  for (let i=0;i<len;i++){
+    const n = (Math.random()*2-1);
+    d[i] = (i? d[i-1]*0.97 + n*0.03 : n) * Math.pow(1 - i/len, 1.5);
+  }
+  noise.buffer = buf;
+  const lp = audioCtx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=1700; lp.Q.value=0.5;
+  const nGain = audioCtx.createGain(); const t0 = audioCtx.currentTime;
+  nGain.gain.setValueAtTime(0.0001,t0);
+  nGain.gain.linearRampToValueAtTime(0.20, t0+0.08);
+  nGain.gain.linearRampToValueAtTime(0.0001, t0+1.0);
+  noise.connect(lp).connect(nGain).connect(master);
+  noise.start(t0); noise.stop(t0+1.02);
+
+  // scattered soft claps
+  const clapCount = 10;
+  for (let k=0;k<clapCount;k++){
+    const when = t0 + 0.08 + Math.random()*0.85;
+    const src = audioCtx.createBufferSource();
+    const bl = Math.floor(audioCtx.sampleRate * 0.034);
+    const bb = audioCtx.createBuffer(1, bl, audioCtx.sampleRate);
+    const bd = bb.getChannelData(0);
+    for (let i=0;i<bl;i++){
+      const env = Math.pow(1 - i/bl, 2.6);
+      bd[i] = (Math.random()*2-1) * env * 0.85;
+    }
+    src.buffer = bb;
+
+    const mix = audioCtx.createGain();
+    mix.gain.value = 0.11;    // gentle level
+
+    src.connect(mix).connect(master);
+    src.start(when);
+    src.stop(when + 0.06);
+  }
+}
+
+/* ===== Confetti ===== */
+const cf = document.createElement('canvas'); cf.id='confettiLayer'; document.body.appendChild(cf);
+cf.style.position='fixed'; cf.style.inset='0'; cf.style.pointerEvents='none'; cf.style.zIndex='8';
+const cfx = cf.getContext('2d');
+function sprinkle(){
+  const dpr=devicePixelRatio||1; cf.width=innerWidth*dpr; cf.height=innerHeight*dpr; cf.style.width='100vw'; cf.style.height='100vh'; cfx.setTransform(dpr,0,0,dpr,0,0);
+  const cx=innerWidth/2, cy=innerHeight/2;
+  const parts=[]; const colors=['#ffd400','#63f7ff','#ff79b0','#a6ff8f','#ffd1ff'];
+  for(let i=0;i<220;i++){
+    const ang=Math.random()*Math.PI*2, spd=2+Math.random()*6;
+    parts.push({x:cx,y:cy,vx:Math.cos(ang)*spd,vy:Math.sin(ang)*spd,g:.06+Math.random()*.08,r:2+Math.random()*2.5,c:colors[i%colors.length],a:1});
+  }
+  const start=performance.now();
+  (function anim(now){
+    const t=now-start;
+    cfx.clearRect(0,0,innerWidth,innerHeight);
+    parts.forEach(p=>{ p.vy+=p.g; p.x+=p.vx; p.y+=p.vy; p.a*=.985;
+      cfx.globalAlpha=Math.max(0,p.a); cfx.fillStyle=p.c; cfx.beginPath(); cfx.arc(p.x,p.y,p.r,0,Math.PI*2); cfx.fill();
+    });
+    if(t<1400) requestAnimationFrame(anim); else cfx.clearRect(0,0,innerWidth,innerHeight);
+  })(start);
+}
+
+/* ===== Game state ===== */
+let order=[], idx=0, revealed=false, started=false;
+let timer=null, timeLeft=12, lastSpaceTime=0;
+let selectedCats = loadSelectedCats();
+let selectedLimit = loadLimit();
+
+/* ===== Flow ===== */
+function updateClock(){ clockEl.textContent="⏱️ "+timeLeft+"s"; clockEl.style.background=timeLeft<=5?"rgba(255,123,123,.3)":"var(--glass2)"; }
+function startTimer(){
+  clearInterval(timer); timeLeft=12; updateClock();
+  timer=setInterval(()=>{ timeLeft--; updateClock(); if(timeLeft<=0){ clearInterval(timer); showAnswer(false); setTimeout(next, 900); } }, 1000);
+}
+function showEmoji(){
+  const m=order[idx]; emojiEl.textContent=m.e; categoryEl.textContent="Category: "+m.c; progressEl.textContent=(idx+1)+" / "+order.length;
+  whoosh();
+}
+function showAnswer(){
+  if(!started) return;
+  if(revealed) return; revealed=true; clearInterval(timer);
+  const m=order[idx]; titleEl.textContent=m.t; clapper.classList.add('show');
+  sprinkle(); celebration();
+}
+function hideAnswer(){ revealed=false; clapper.classList.remove('show'); }
+function next(){
+  if(!started) return;
+  hideAnswer(); idx++;
+  if(idx>=order.length){ end(); return; }
+  showEmoji(); startTimer();
+}
+function end(){
+  emojiEl.textContent="🎉 All done!"; categoryEl.textContent="Great game!"; clockEl.textContent="⏱️ —";
+  titleEl.textContent="Thanks for playing!"; clapper.classList.add('show');
+}
+
+/* ===== Init ===== */
+function renderActiveChips(){
+  activeCatsRow.innerHTML='';
+  selectedCats.forEach(cat=>{
+    const chip=document.createElement('div'); chip.className='chip'; chip.innerHTML=`${cat} <button aria-label="Remove ${cat}">×</button>`;
+    chip.querySelector('button').addEventListener('click', ()=>{
+      selectedCats = selectedCats.filter(c=>c!==cat);
+      if(!selectedCats.length){ selectedCats=[...ALL_CATS]; }
+      saveSelectedCats(selectedCats);
+      if(started) init(selectedCats, selectedLimit);
+    });
+    activeCatsRow.appendChild(chip);
+  });
+}
+function init(withCats=selectedCats, withLimit=selectedLimit){
+  selectedCats = (withCats && withCats.length) ? uniq(withCats) : [...ALL_CATS];
+  selectedLimit = LIMITS.includes(+withLimit) ? +withLimit : 30;
+  saveSelectedCats(selectedCats); saveLimit(selectedLimit);
+  const list = getFilteredList(selectedCats);
+  const pool = shuffle([...list]);
+  order = pool.slice(0, Math.min(selectedLimit, pool.length));
+  idx=0; hideAnswer(); showEmoji(); startTimer(); renderActiveChips();
+}
+
+/* ===== Controls ===== */
+btnReveal.addEventListener('click', ()=>showAnswer());
+btnNext.addEventListener('click', ()=>{ hideAnswer(); next(); });
+btnSkip.addEventListener('click', ()=>{ hideAnswer(); next(); });
+btnRestart.addEventListener('click', ()=>{ if(!started) return; init(); });
+
+document.addEventListener('keydown', (e)=>{
+  if(e.code!=='Space') return;
+  if(!started){ e.preventDefault(); return; }
+  e.preventDefault();
+  const now=performance.now();
+  if(now - lastSpaceTime < 420){ hideAnswer(); next(); lastSpaceTime=0; } else { showAnswer(); lastSpaceTime=now; }
+});
+
+shuffleBtn.addEventListener('click', ()=>{ if(!started) return; init(selectedCats, selectedLimit); });
+
+/* ===== Rules modal ===== */
+rulesBtn.addEventListener('click', ()=> rulesModal.style.display='flex');
+rulesClose.addEventListener('click', ()=> rulesModal.style.display='none');
+rulesModal.addEventListener('click', (e)=>{ if(e.target===rulesModal) rulesModal.style.display='none'; });
+
+/* ===== Categories & Rounds modal (first thing) ===== */
+function buildCatsGrid(){
+  catsGrid.innerHTML='';
+  ALL_CATS.forEach(cat=>{
+    const label=document.createElement('label'); label.className='cat-item';
+    const id='cat_'+cat.replace(/\s+/g,'_');
+    label.innerHTML = `<input id="${id}" type="checkbox" class="cat" value="${cat}"/> <span>${cat}</span>`;
+    catsGrid.appendChild(label);
+  });
+}
+buildCatsGrid();
+const catChecks = () => Array.from(document.querySelectorAll('.cat'));
+
+catsBtn.addEventListener('click', openCats);
+function openCats(){
+  catsModal.style.display='flex';
+  const saved = new Set(selectedCats);
+  catChecks().forEach(cb=> cb.checked = saved.has(cb.value));
+  const limitInputs = document.querySelectorAll('input[name="limit"]');
+  limitInputs.forEach(r=> r.checked = (+r.value === selectedLimit));
+}
+catsCancel.addEventListener('click', ()=> catsModal.style.display='none');
+catsModal.addEventListener('click', (e)=>{ if(e.target===catsModal) catsModal.style.display='none'; });
+catsAll.addEventListener('click', ()=> catChecks().forEach(cb=> cb.checked = true));
+catsNone.addEventListener('click', ()=> catChecks().forEach(cb=> cb.checked = false));
+
+catsApply.addEventListener('click', ()=>{
+  const chosen = catChecks().filter(cb=>cb.checked).map(cb=>cb.value);
+  if(!chosen.length){ alert('Pick at least one category.'); return; }
+  const limit = +document.querySelector('input[name="limit"]:checked')?.value || selectedLimit;
+  catsModal.style.display='none';
+  started = true;
+  init(chosen, limit);
+  if(musicOn) startMusic();
+});
+
+/* ===== Boot: open the categories modal first ===== */
+window.addEventListener('load', ()=>{ catsModal.style.display='flex'; });
+</script>
+</body>
+</html>
