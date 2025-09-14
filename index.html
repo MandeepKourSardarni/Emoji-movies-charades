@@ -150,7 +150,7 @@
     <main>
       <section class="board" aria-live="polite">
         <div class="toprow">
-          <div class="metaL"><div id="progress" class="tag">1 / 150</div></div>
+          <div class="metaL"><div id="progress" class="tag">— / —</div></div>
           <div class="center"><div id="category" class="category">Category: —</div></div>
           <div class="metaR"><div id="clock" class="timer">⏱️ 12s</div></div>
         </div>
@@ -218,37 +218,124 @@
   </div>
 
 <script>
-/* ========= Movies (starter set, extend as you like) ========= */
+/* ========= Movies =========
+   Includes the originals you had + 50+ NEW non-duplicate titles.
+   (No repeats of: 3 Idiots, Dangal, Pathaan, Jawan, Brahmāstra, Gully Boy,
+    Oppenheimer, Barbie, Dune: Part Two, Top Gun: Maverick, Inside Out 2,
+    Kantara, 777 Charlie, KGF Chapter 2,
+    Kalki 2898 AD, RRR (Tel), Pushpa: The Rise,
+    Manjummel Boys, 2018, Premam,
+    Vikram (2022), Jailer, Leo)
+*/
 const MOVIES = [
-  /* Hindi */
+  /* Hindi (originals) */
   {t:"3 Idiots", e:"🎓🧠🤪👨‍🎓", c:"Hindi movie"},
   {t:"Dangal", e:"🥇🤼‍♀️👨‍👧‍👧", c:"Hindi movie"},
   {t:"Pathaan", e:"🕶️🛩️❄️💥", c:"Hindi movie"},
   {t:"Jawan", e:"🛤️🕶️🎭💥", c:"Hindi movie"},
   {t:"Brahmāstra", e:"🔥🪄🔱🌌", c:"Hindi movie"},
   {t:"Gully Boy", e:"🎤🧢🚇🔥", c:"Hindi movie"},
-  /* English */
+  /* English (originals) */
   {t:"Oppenheimer", e:"🔬☢️🕶️💥", c:"English movie"},
   {t:"Barbie", e:"🎀👱‍♀️🏙️💖", c:"English movie"},
   {t:"Dune: Part Two", e:"🏜️🐛👑⚔️", c:"English movie"},
   {t:"Top Gun: Maverick", e:"✈️🕶️🔥🎖️", c:"English movie"},
   {t:"Inside Out 2", e:"😀😢😠😨🤢🧠2️⃣", c:"English movie"},
-  /* Kannada */
+  /* Kannada (originals) */
   {t:"Kantara", e:"🌾🛕🕺🔥", c:"Kannada movie"},
   {t:"777 Charlie", e:"🐶🚗❤️", c:"Kannada movie"},
   {t:"KGF Chapter 2", e:"⛏️👑💰⚔️", c:"Kannada movie"},
-  /* Telugu */
+  /* Telugu (originals) */
   {t:"Kalki 2898 AD", e:"🤖🛕🌌⚔️", c:"Telugu movie"},
   {t:"RRR (Tel)", e:"🤝🔥🌧️", c:"Telugu movie"},
   {t:"Pushpa: The Rise", e:"🌲💼🧔‍♂️🕶️", c:"Telugu movie"},
-  /* Malayalam */
+  /* Malayalam (originals) */
   {t:"Manjummel Boys", e:"🕳️🧗‍♂️🧑‍🤝‍🧑", c:"Malayalam movie"},
   {t:"2018", e:"🌧️🚤🤝🇮🇳", c:"Malayalam movie"},
   {t:"Premam", e:"❤️🎓📖🍺", c:"Malayalam movie"},
-  /* Tamil */
+  /* Tamil (originals) */
   {t:"Vikram (2022)", e:"🕶️🔫🧪", c:"Tamil movie"},
   {t:"Jailer", e:"🗝️👑🧔‍♂️", c:"Tamil movie"},
   {t:"Leo", e:"🧊🐯🗡️", c:"Tamil movie"},
+
+  /* ===== NEW: Hindi ===== */
+  {t:"Animal", e:"🐯🩸🧔‍♂️", c:"Hindi movie"},
+  {t:"Gadar 2", e:"🇮🇳🚜💥", c:"Hindi movie"},
+  {t:"Dunki", e:"✈️🌍🧳😂", c:"Hindi movie"},
+  {t:"12th Fail", e:"📚📝💪", c:"Hindi movie"},
+  {t:"Stree 2", e:"👻🌃😂", c:"Hindi movie"},
+  {t:"Tanhaji", e:"🗡️🛡️🏰", c:"Hindi movie"},
+  {t:"Andhadhun", e:"🎹👨‍🦯🕵️", c:"Hindi movie"},
+  {t:"OMG 2", e:"🕉️📚👨‍🏫", c:"Hindi movie"},
+  {t:"Drishyam 2 (Hindi)", e:"👨‍👩‍👧‍👦📼🕵️", c:"Hindi movie"},
+  {t:"War", e:"🕶️🔫🏍️", c:"Hindi movie"},
+  {t:"Super 30", e:"📐📊👨‍🏫", c:"Hindi movie"},
+  {t:"Article 15", e:"⚖️🚓🌧️", c:"Hindi movie"},
+  {t:"PK", e:"👽📻🍷", c:"Hindi movie"},
+  {t:"Queen", e:"👑✈️🍷", c:"Hindi movie"},
+  {t:"Kabir Singh", e:"👨‍⚕️💔🥃", c:"Hindi movie"},
+  {t:"Raazi", e:"🕵️‍♀️🇮🇳🇵🇰", c:"Hindi movie"},
+  {t:"Bajrangi Bhaijaan", e:"🧔‍♂️🧒🇮🇳🇵🇰", c:"Hindi movie"},
+
+  /* ===== NEW: English ===== */
+  {t:"Deadpool & Wolverine", e:"🧑‍🎤🗡️🐺", c:"English movie"},
+  {t:"John Wick: Chapter 4", e:"🕶️🗡️🏛️", c:"English movie"},
+  {t:"Mission: Impossible – Dead Reckoning", e:"🕵️‍♂️🪂💥", c:"English movie"},
+  {t:"Spider-Man: No Way Home", e:"🕷️🕸️🏙️", c:"English movie"},
+  {t:"Across the Spider-Verse", e:"🕷️🕸️🎨", c:"English movie"},
+  {t:"The Batman", e:"🦇🌧️🏙️", c:"English movie"},
+  {t:"Joker", e:"🤡🔪🃏", c:"English movie"},
+  {t:"Wonka", e:"🍫🎩✨", c:"English movie"},
+  {t:"Godzilla x Kong: The New Empire", e:"🦖🦍💥🌆", c:"English movie"},
+  {t:"No Time to Die", e:"🕶️🔫⌚", c:"English movie"},
+  {t:"Avengers: Endgame", e:"🦸‍♂️🦸‍♀️💎🖐️", c:"English movie"},
+  {t:"Guardians of the Galaxy Vol. 3", e:"🪐🎵🦝", c:"English movie"},
+  {t:"Frozen II", e:"❄️👭🍂", c:"English movie"},
+  {t:"The Lion King (2019)", e:"🦁👑🌅", c:"English movie"},
+  {t:"Tenet", e:"⏳🔁🕵️‍♂️", c:"English movie"},
+  {t:"A Quiet Place Part II", e:"🤫👣👂", c:"English movie"},
+
+  /* ===== NEW: Kannada ===== */
+  {t:"Vikrant Rona", e:"🌧️🌲🕵️‍♂️", c:"Kannada movie"},
+  {t:"Sapta Sagaradaache Ello", e:"🌊❤️📮", c:"Kannada movie"},
+  {t:"Garuda Gamana Vrishabha Vahana", e:"🦅🐂⚔️", c:"Kannada movie"},
+  {t:"Hostel Hudugaru Bekagiddare", e:"🏫😂🎭", c:"Kannada movie"},
+  {t:"Kirik Party", e:"🎓🎉❤️", c:"Kannada movie"},
+  {t:"Ugramm", e:"🗡️🌆💥", c:"Kannada movie"},
+  {t:"Bell Bottom (Kannada)", e:"🕵️‍♂️📼📞", c:"Kannada movie"},
+
+  /* ===== NEW: Telugu ===== */
+  {t:"Sita Ramam", e:"💌👨‍✈️❄️", c:"Telugu movie"},
+  {t:"Salaar", e:"🗡️🛢️🌑", c:"Telugu movie"},
+  {t:"Ala Vaikunthapurramuloo", e:"🏠🎶💼", c:"Telugu movie"},
+  {t:"Hi Nanna", e:"👨‍👧❤️📸", c:"Telugu movie"},
+  {t:"Devara: Part 1", e:"🌊🗡️🩸", c:"Telugu movie"},
+  {t:"Sarkaru Vaari Paata", e:"💰🏦🎯", c:"Telugu movie"},
+  {t:"Bro", e:"⌛🕴️😇", c:"Telugu movie"},
+  {t:"Dasara", e:"🏭🍺🔥", c:"Telugu movie"},
+
+  /* ===== NEW: Malayalam ===== */
+  {t:"Aavesham", e:"🤝🕺🍻", c:"Malayalam movie"},
+  {t:"Romancham", e:"👻🪄😂", c:"Malayalam movie"},
+  {t:"Kumbalangi Nights", e:"🏠🦀❤️", c:"Malayalam movie"},
+  {t:"Lucifer", e:"🕶️🏛️♟️", c:"Malayalam movie"},
+  {t:"Ayyappanum Koshiyum", e:"👮‍♂️🚙⚔️", c:"Malayalam movie"},
+  {t:"Kurup", e:"🧳🕶️✈️", c:"Malayalam movie"},
+  {t:"Minnal Murali", e:"⚡🦸‍♂️🧥", c:"Malayalam movie"},
+  {t:"Jana Gana Mana", e:"⚖️🎓🔥", c:"Malayalam movie"},
+
+  /* ===== NEW: Tamil ===== */
+  {t:"Ponniyin Selvan: I", e:"👑🌊⚔️", c:"Tamil movie"},
+  {t:"Ponniyin Selvan: II", e:"👑⚓⚔️", c:"Tamil movie"},
+  {t:"Master", e:"👨‍🏫🥊🍷", c:"Tamil movie"},
+  {t:"Beast", e:"🏨🔫🕵️‍♂️", c:"Tamil movie"},
+  {t:"Kaithi", e:"🚚⛓️🌙", c:"Tamil movie"},
+  {t:"Thunivu", e:"🏦🔫🎭", c:"Tamil movie"},
+  {t:"Good Night", e:"😴❤️🛏️", c:"Tamil movie"},
+  {t:"Maaveeran", e:"🦸‍♂️🗣️🛡️", c:"Tamil movie"},
+  {t:"Ayalaan", e:"👽🛸🌿", c:"Tamil movie"},
+  {t:"Love Today", e:"💘📱😅", c:"Tamil movie"},
+  {t:"Doctor (2021)", e:"👨‍⚕️🎭😂", c:"Tamil movie"}
 ];
 
 /* ===== UI refs ===== */
@@ -319,7 +406,7 @@ function drawEdge(t=0){
 }
 requestAnimationFrame(drawEdge);
 
-/* ===== Audio: background + whoosh + SOFT CELEBRATION CLAPS ===== */
+/* ===== Audio: background + whoosh + soft celebration claps ===== */
 let audioCtx, musicOn=true, musicLoop=null;
 function ensureAudio(){ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)(); }
 function startMusic(){
@@ -373,7 +460,7 @@ function whoosh(){
   o.connect(g).connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime+.3);
 }
 
-/* Soft celebration claps (gentle, non-harsh) */
+/* Soft celebration claps (gentle) */
 function celebration(){
   ensureAudio();
   const master = audioCtx.createGain();
@@ -413,7 +500,7 @@ function celebration(){
     src.buffer = bb;
 
     const mix = audioCtx.createGain();
-    mix.gain.value = 0.11;    // gentle level
+    mix.gain.value = 0.11;
 
     src.connect(mix).connect(master);
     src.start(when);
@@ -478,6 +565,23 @@ function end(){
   titleEl.textContent="Thanks for playing!"; clapper.classList.add('show');
 }
 
+/* ===== Build exact-length order from any pool (loops + reshuffles, no immediate dupes) ===== */
+function buildOrder(pool, limit){
+  if (!pool.length) return [];
+  const out = [];
+  let bag = shuffle([...pool]);
+  while (out.length < limit){
+    if (!bag.length) bag = shuffle([...pool]);
+    const pick = bag.shift();
+    if (out.length && out[out.length - 1].t === pick.t){
+      bag.push(pick); // avoid same back-to-back
+      continue;
+    }
+    out.push(pick);
+  }
+  return out;
+}
+
 /* ===== Init ===== */
 function renderActiveChips(){
   activeCatsRow.innerHTML='';
@@ -495,10 +599,14 @@ function renderActiveChips(){
 function init(withCats=selectedCats, withLimit=selectedLimit){
   selectedCats = (withCats && withCats.length) ? uniq(withCats) : [...ALL_CATS];
   selectedLimit = LIMITS.includes(+withLimit) ? +withLimit : 30;
-  saveSelectedCats(selectedCats); saveLimit(selectedLimit);
+
+  saveSelectedCats(selectedCats);
+  saveLimit(selectedLimit);
+
   const list = getFilteredList(selectedCats);
   const pool = shuffle([...list]);
-  order = pool.slice(0, Math.min(selectedLimit, pool.length));
+  order = buildOrder(pool, selectedLimit);  // <-- ensures exact 10/20/30/50
+
   idx=0; hideAnswer(); showEmoji(); startTimer(); renderActiveChips();
 }
 
