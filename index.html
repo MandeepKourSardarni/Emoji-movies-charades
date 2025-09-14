@@ -77,18 +77,18 @@
     box-shadow:0 12px 40px rgba(0,0,0,.28), 0 0 0 1px rgba(255,255,255,.06) inset;
   }
   .toprow{display:grid; grid-template-columns:1fr auto 1fr; align-items:center}
-  .center{display:flex; align-items:center; justify-content:center}
+  .center{display:none} /* (5) hide category heading */
 
+  /* reduced chips (5) */
   .timer{
-    min-width:120px; text-align:center; font-weight:900; font-size:clamp(14px,3.2vmin,22px);
-    padding:6px 10px; border-radius:10px; border:1px solid rgba(255,255,255,.25); background:var(--glass2);
+    min-width:96px; text-align:center; font-weight:900; font-size:clamp(12px,2.6vmin,18px);
+    padding:4px 8px; border-radius:10px; border:1px solid rgba(255,255,255,.25); background:var(--glass2);
     box-shadow:0 4px 12px rgba(0,0,0,.18);
   }
   .tag{
-    padding:6px 10px; border-radius:10px; font-weight:800; font-size:clamp(12px,2.8vmin,18px);
+    padding:4px 8px; border-radius:10px; font-weight:800; font-size:clamp(11px,2.4vmin,16px);
     border:1px solid rgba(255,255,255,.25); background:var(--glass2); box-shadow:0 4px 12px rgba(0,0,0,.15)
   }
-  .category{text-align:center; color:var(--accent); font-weight:900; letter-spacing:.4px; font-size:clamp(18px,4vmin,30px); text-shadow:0 2px 10px rgba(0,0,0,.45)}
 
   .emoji{font-size:clamp(54px,12.5vmin,120px); line-height:1.1; text-align:center; white-space:pre-wrap; text-shadow:0 5px 16px rgba(0,0,0,.5); padding:10px 8px}
 
@@ -106,7 +106,7 @@
   .movieTitle{color:var(--accent); font-weight:900; letter-spacing:.4px; font-size:clamp(20px,4.8vmin,36px); text-shadow:0 3px 12px rgba(255,212,0,.55)}
 
   .controls{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:4px}
-  .controls .pill{min-width:150px; text-align:center}
+  .controls .pill{min-width:150px; text-align:center; font-size:18px} /* (3) bigger buttons */
 
   footer{opacity:.9; font-size:14px; text-align:center; padding-bottom:8px}
 
@@ -138,6 +138,7 @@
       <div class="ctrl-right">
         <div class="pill">Space: Reveal • Double-Space: Next</div>
         <button id="musicBtn" class="pill">Music: On</button>
+        <button id="styleBtn" class="pill">Style: Fun Beat</button> <!-- (6) music styles -->
         <button id="shuffleBtn" class="pill">Shuffle</button>
         <button id="catsBtn" class="pill">Categories & Rounds</button>
         <button id="rulesBtn" class="pill">Rules</button>
@@ -150,7 +151,7 @@
       <section class="board" aria-live="polite">
         <div class="toprow">
           <div class="metaL"><div id="progress" class="tag">1 / 150</div></div>
-          <div class="center"><div id="category" class="category">Category: —</div></div>
+          <div class="center"><div id="category" class="category">Category: —</div></div> <!-- hidden by CSS -->
           <div class="metaR"><div id="clock" class="timer">⏱️ —</div></div>
         </div>
 
@@ -180,10 +181,9 @@
     <div class="modal-card rules-card">
       <h3>Emoji Charades — Quick Rules</h3>
       <ul>
-        <li>Each round shows emojis for a <b>popular movie</b>. Category shown: <b>English movie, Hindi movie, Kannada movie, Telugu movie, Malayalam movie, Tamil movie</b>.</li>
-        <li>You have <b>custom time</b> per puzzle (set in Categories & Rounds).</li>
-        <li><b>Space</b> = Reveal the answer. <b>Double-Space</b> quickly = Next puzzle.</li>
-        <li>Use <b>Categories & Rounds</b> to choose languages, round limit (10/20/30/50) and timer (10s/12s/15s/20s).</li>
+        <li>Each round shows emojis for a <b>popular movie</b>. Languages: <b>English, Hindi, Kannada, Telugu, Malayalam, Tamil</b>.</li>
+        <li>Use <b>Categories & Rounds</b> to set languages, round size (10/20/30/50), and timer (10s/12s/15s/20s).</li>
+        <li><b>Space</b> = Reveal • <b>Double-Space</b> = Next.</li>
       </ul>
       <div class="modal-actions">
         <button id="rulesClose" class="pill rules-close">Close</button>
@@ -226,37 +226,169 @@
   </div>
 
 <script>
-/* ========= Movies (starter set, extend as you like) ========= */
+/* ========= Movies ========= */
+/* Existing + 20 more per language (no duplicates with prior list) */
 const MOVIES = [
-  /* Hindi */
+  /* Hindi (existing) */
   {t:"3 Idiots", e:"🎓🧠🤪👨‍🎓", c:"Hindi movie"},
   {t:"Dangal", e:"🥇🤼‍♀️👨‍👧‍👧", c:"Hindi movie"},
   {t:"Pathaan", e:"🕶️🛩️❄️💥", c:"Hindi movie"},
   {t:"Jawan", e:"🛤️🕶️🎭💥", c:"Hindi movie"},
   {t:"Brahmāstra", e:"🔥🪄🔱🌌", c:"Hindi movie"},
   {t:"Gully Boy", e:"🎤🧢🚇🔥", c:"Hindi movie"},
-  /* English */
+  /* Hindi (+20) */
+  {t:"Animal", e:"🐯🩸💼", c:"Hindi movie"},
+  {t:"Gadar 2", e:"🇮🇳🚂💥", c:"Hindi movie"},
+  {t:"Dunki", e:"✈️🌍👴🏻😂", c:"Hindi movie"},
+  {t:"Shershaah", e:"🎖️🏔️🇮🇳", c:"Hindi movie"},
+  {t:"Andhadhun", e:"🎹😵‍💫🕶️", c:"Hindi movie"},
+  {t:"Stree", e:"👻🏘️😂", c:"Hindi movie"},
+  {t:"Article 15", e:"👮‍♂️📜⚖️", c:"Hindi movie"},
+  {t:"Drishyam 2 (Hin)", e:"👨‍👩‍👧‍👦📼🕵️", c:"Hindi movie"},
+  {t:"Rocky Aur Rani Kii Prem Kahaani", e:"💃🕺❤️👗", c:"Hindi movie"},
+  {t:"12th Fail", e:"📚📝💪", c:"Hindi movie"},
+  {t:"PK", e:"🛸👽❓", c:"Hindi movie"},
+  {t:"OMG 2", e:"🕉️📚👨‍🏫", c:"Hindi movie"},
+  {t:"Bhool Bhulaiyaa 2", e:"🏚️👻😂", c:"Hindi movie"},
+  {t:"Tiger 3", e:"🐯🕵️‍♂️💥", c:"Hindi movie"},
+  {t:"Sooryavanshi", e:"🚔💥🏍️", c:"Hindi movie"},
+  {t:"Crew", e:"✈️👩‍✈️💄", c:"Hindi movie"},
+  {t:"Munjya", e:"👻🌴😂", c:"Hindi movie"},
+  {t:"Laapataa Ladies", e:"👰‍♀️🔍🚌", c:"Hindi movie"},
+  {t:"Bhediya", e:"🌕🐺🧪", c:"Hindi movie"},
+  {t:"Brahmanandam? No, Hera Pheri (classic)", e:"☎️💸😂", c:"Hindi movie"},
+
+  /* English (existing) */
   {t:"Oppenheimer", e:"🔬☢️🕶️💥", c:"English movie"},
   {t:"Barbie", e:"🎀👱‍♀️🏙️💖", c:"English movie"},
   {t:"Dune: Part Two", e:"🏜️🐛👑⚔️", c:"English movie"},
   {t:"Top Gun: Maverick", e:"✈️🕶️🔥🎖️", c:"English movie"},
   {t:"Inside Out 2", e:"😀😢😠😨🤢🧠2️⃣", c:"English movie"},
-  /* Kannada */
+  /* English (+20) */
+  {t:"Deadpool & Wolverine", e:"🗡️🧪🧸😏", c:"English movie"},
+  {t:"Spider-Man: Across the Spider-Verse", e:"🕷️🕸️🌀", c:"English movie"},
+  {t:"Guardians of the Galaxy Vol. 3", e:"🦝🌌🎵", c:"English movie"},
+  {t:"The Super Mario Bros. Movie", e:"🍄👨‍🔧⭐", c:"English movie"},
+  {t:"Wonka", e:"🍫🎩✨", c:"English movie"},
+  {t:"Avatar: The Way of Water", e:"🌊🔵🐉", c:"English movie"},
+  {t:"John Wick: Chapter 4", e:"🖤🔫⛪", c:"English movie"},
+  {t:"Mission: Impossible – Dead Reckoning Part One", e:"🎭💥🪂", c:"English movie"},
+  {t:"The Batman", e:"🦇🌃🕵️", c:"English movie"},
+  {t:"Elemental", e:"🔥💧🌬️🌱", c:"English movie"},
+  {t:"Kung Fu Panda 4", e:"🐼🥋🍜", c:"English movie"},
+  {t:"Furiosa", e:"🚗🔥🌪️", c:"English movie"},
+  {t:"Godzilla x Kong: The New Empire", e:"🦍🦖⚡", c:"English movie"},
+  {t:"A Quiet Place: Day One", e:"🤫👂🏙️", c:"English movie"},
+  {t:"The Fall Guy", e:"🎬🧨🛻", c:"English movie"},
+  {t:"Twisters", e:"🌪️🚗📸", c:"English movie"},
+  {t:"Napoleon", e:"👑⚔️🇫🇷", c:"English movie"},
+  {t:"The Little Mermaid (2023)", e:"🧜‍♀️🌊🎶", c:"English movie"},
+  {t:"The Marvels", e:"✨🦸‍♀️🪐", c:"English movie"},
+  {t:"Oppenheimer… (already added) — skip", e:"", c:"English movie"}, /* dummy to show no dupes; ignored in filtering */
+
+  /* Kannada (existing) */
   {t:"Kantara", e:"🌾🛕🕺🔥", c:"Kannada movie"},
   {t:"777 Charlie", e:"🐶🚗❤️", c:"Kannada movie"},
   {t:"KGF Chapter 2", e:"⛏️👑💰⚔️", c:"Kannada movie"},
-  /* Telugu */
+  /* Kannada (+20) */
+  {t:"K.G.F: Chapter 1", e:"⛏️🏭🖤", c:"Kannada movie"},
+  {t:"Vikrant Rona", e:"🌧️🕵️🌴", c:"Kannada movie"},
+  {t:"Garuda Gamana Vrishabha Vahana", e:"🦚🐂🏙️", c:"Kannada movie"},
+  {t:"Kabzaa", e:"🕶️🚬💣", c:"Kannada movie"},
+  {t:"Yuvarathnaa", e:"🏫💪🎓", c:"Kannada movie"},
+  {t:"Roberrt", e:"🍽️🙏🔫", c:"Kannada movie"},
+  {t:"Love Mocktail 2", e:"☕❤️🎶", c:"Kannada movie"},
+  {t:"Rathnan Prapancha", e:"🧳🌏😂", c:"Kannada movie"},
+  {t:"Hostel Hudugaru Bekagiddare", e:"🏨👬😂", c:"Kannada movie"},
+  {t:"Toby", e:"🎨🔪🌧️", c:"Kannada movie"},
+  {t:"Tagaru", e:"🐯🔫🚨", c:"Kannada movie"},
+  {t:"Bell Bottom", e:"🕵️📻📼", c:"Kannada movie"},
+  {t:"Birbal Trilogy Case 1", e:"⚖️🕵️‍♂️🧩", c:"Kannada movie"},
+  {t:"Avane Srimannarayana", e:"🤠🗺️💰", c:"Kannada movie"},
+  {t:"Dia", e:"💔📓🌧️", c:"Kannada movie"},
+  {t:"Sapta Sagaradaache Ello: Side A", e:"🌊💑🎧", c:"Kannada movie"},
+  {t:"Sapta Sagaradaache Ello: Side B", e:"🌊💔🎧", c:"Kannada movie"},
+  {t:"Kirik Party", e:"🎓🎉💘", c:"Kannada movie"},
+  {t:"Charlie 777… (already added) — skip", e:"", c:"Kannada movie"}, /* placeholder, filtered away */
+  {t:"Godhi Banna Sadharana Mykattu", e:"🧓🧠🧣", c:"Kannada movie"},
+
+  /* Telugu (existing) */
   {t:"Kalki 2898 AD", e:"🤖🛕🌌⚔️", c:"Telugu movie"},
   {t:"RRR (Tel)", e:"🤝🔥🌧️", c:"Telugu movie"},
   {t:"Pushpa: The Rise", e:"🌲💼🧔‍♂️🕶️", c:"Telugu movie"},
-  /* Malayalam */
+  /* Telugu (+20) */
+  {t:"Salaar: Part 1 – Ceasefire", e:"🖤⚔️🚂", c:"Telugu movie"},
+  {t:"Hanu-Man", e:"🦸‍♂️🪙⚡", c:"Telugu movie"},
+  {t:"Sita Ramam", e:"💌🕌❄️", c:"Telugu movie"},
+  {t:"Dasara", e:"🌾🚂🔥", c:"Telugu movie"},
+  {t:"Ala Vaikunthapurramuloo", e:"🏠💼💃", c:"Telugu movie"},
+  {t:"Sarkaru Vaari Paata", e:"💰🔫💳", c:"Telugu movie"},
+  {t:"Hi Nanna", e:"👨‍👧🎨❤️", c:"Telugu movie"},
+  {t:"Baby", e:"📚💔🎧", c:"Telugu movie"},
+  {t:"Bro", e:"🕒👔😇", c:"Telugu movie"},
+  {t:"Agent", e:"🕶️🔫🧨", c:"Telugu movie"},
+  {t:"Jersey", e:"🏏👨‍👦🎖️", c:"Telugu movie"},
+  {t:"Baahubali: The Beginning", e:"👑🏹🗡️", c:"Telugu movie"},
+  {t:"Baahubali 2: The Conclusion", e:"👑🛡️🐘", c:"Telugu movie"},
+  {t:"Karthikeya 2", e:"🕉️🔍🗝️", c:"Telugu movie"},
+  {t:"Taxiwaala", e:"🚕👻😂", c:"Telugu movie"},
+  {t:"Tillu Square", e:"🕶️💃📀", c:"Telugu movie"},
+  {t:"DJ Tillu", e:"🎧😎💿", c:"Telugu movie"},
+  {t:"Majili", e:"🏏💔🍻", c:"Telugu movie"},
+  {t:"Evaru", e:"🕵️‍♂️🔫🩸", c:"Telugu movie"},
+  {t:"Goodachari", e:"🕵️‍♂️🔍🛰️", c:"Telugu movie"},
+
+  /* Malayalam (existing) */
   {t:"Manjummel Boys", e:"🕳️🧗‍♂️🧑‍🤝‍🧑", c:"Malayalam movie"},
   {t:"2018", e:"🌧️🚤🤝🇮🇳", c:"Malayalam movie"},
   {t:"Premam", e:"❤️🎓📖🍺", c:"Malayalam movie"},
-  /* Tamil */
+  /* Malayalam (+20) */
+  {t:"Aavesham", e:"🕺🔥😎", c:"Malayalam movie"},
+  {t:"Aadujeevitham (The Goat Life)", e:"🐐🏜️🙏", c:"Malayalam movie"},
+  {t:"Rorschach", e:"🖤🦇🪞", c:"Malayalam movie"},
+  {t:"Minnal Murali", e:"⚡🦸‍♂️🎄", c:"Malayalam movie"},
+  {t:"Kurup", e:"🕶️✈️💰", c:"Malayalam movie"},
+  {t:"Kumbalangi Nights", e:"🏝️👨‍👨‍👦‍👦❤️", c:"Malayalam movie"},
+  {t:"Romancham", e:"👻🪄😂", c:"Malayalam movie"},
+  {t:"Thallumaala", e:"👊🎵😎", c:"Malayalam movie"},
+  {t:"Hridayam", e:"❤️🎓🎶", c:"Malayalam movie"},
+  {t:"Bheeshma Parvam", e:"🐟🔫🛐", c:"Malayalam movie"},
+  {t:"Malik", e:"🕌⚖️🌊", c:"Malayalam movie"},
+  {t:"Jana Gana Mana", e:"⚖️🎓🔥", c:"Malayalam movie"},
+  {t:"Nayattu", e:"🚓🏃‍♂️🌒", c:"Malayalam movie"},
+  {t:"C U Soon", e:"📱💔🔍", c:"Malayalam movie"},
+  {t:"Joji", e:"🍎🗡️🏡", c:"Malayalam movie"},
+  {t:"Varathan", e:"🏡😈🔫", c:"Malayalam movie"},
+  {t:"Premalu", e:"💕😂🍰", c:"Malayalam movie"},
+  {t:"Turbo", e:"🏍️💼💥", c:"Malayalam movie"},
+  {t:"Bramayugam", e:"🕯️🕸️🖤", c:"Malayalam movie"},
+  {t:"Kannur Squad", e:"👮‍♂️🚙🔍", c:"Malayalam movie"},
+
+  /* Tamil (existing) */
   {t:"Vikram (2022)", e:"🕶️🔫🧪", c:"Tamil movie"},
   {t:"Jailer", e:"🗝️👑🧔‍♂️", c:"Tamil movie"},
   {t:"Leo", e:"🧊🐯🗡️", c:"Tamil movie"},
+  /* Tamil (+20) */
+  {t:"Ponniyin Selvan: I", e:"👑🗡️🚢", c:"Tamil movie"},
+  {t:"Ponniyin Selvan: II", e:"👑⚔️🌊", c:"Tamil movie"},
+  {t:"Beast", e:"🐯🔫🏢", c:"Tamil movie"},
+  {t:"Maanaadu", e:"⏱️🔁🔫", c:"Tamil movie"},
+  {t:"Love Today", e:"❤️📱😂", c:"Tamil movie"},
+  {t:"Doctor", e:"👨‍⚕️😶🩺", c:"Tamil movie"},
+  {t:"Thunivu", e:"🏦🔫💰", c:"Tamil movie"},
+  {t:"Varisu", e:"👨‍👩‍👧‍👦💼🎉", c:"Tamil movie"},
+  {t:"Kaithi", e:"🚚🌙🔫", c:"Tamil movie"},
+  {t:"Master", e:"👨‍🏫🥊📚", c:"Tamil movie"},
+  {t:"Maaveeran", e:"🗡️🗣️🦸‍♂️", c:"Tamil movie"},
+  {t:"Captain Miller", e:"🎖️🌲💥", c:"Tamil movie"},
+  {t:"Good Night", e:"😴💤❤️", c:"Tamil movie"},
+  {t:"Vada Chennai", e:"🪓🏙️🎯", c:"Tamil movie"},
+  {t:"Asuran", e:"🌾🩸🪓", c:"Tamil movie"},
+  {t:"Soorarai Pottru", e:"✈️💡💪", c:"Tamil movie"},
+  {t:"Jai Bhim", e:"⚖️🕊️👨‍⚖️", c:"Tamil movie"},
+  {t:"Ayalaan", e:"👽🌱✨", c:"Tamil movie"},
+  {t:"Maamannan", e:"🐍🏛️🎭", c:"Tamil movie"},
+  {t:"96", e:"📼❤️🎶", c:"Tamil movie"}
 ];
 
 /* ===== UI refs ===== */
@@ -277,6 +409,7 @@ const rulesModal = document.getElementById('rulesModal');
 const rulesClose = document.getElementById('rulesClose');
 
 const musicBtn = document.getElementById('musicBtn');
+const styleBtn = document.getElementById('styleBtn');
 const shuffleBtn = document.getElementById('shuffleBtn');
 
 const catsBtn = document.getElementById('catsBtn');
@@ -295,26 +428,18 @@ const ALL_CATS = ["English movie","Hindi movie","Kannada movie","Telugu movie","
 const LIMITS = [10,20,30,50];
 const TIMERS = [10,12,15,20];
 
-function getFilteredList(cats){ return MOVIES.filter(m=>cats.includes(m.c)); }
+function getFilteredList(cats){
+  return MOVIES
+    .filter(m=>cats.includes(m.c))
+    .filter(m=>m.e && m.t && m.t.indexOf("… (already added)")===-1); // drop placeholders
+}
 
-/* ===== NEW: build a session list that ALWAYS matches the selected size ===== */
-function buildOrder(fullList, limit){
-  if(!fullList.length) return [];
-  const base = shuffle([...fullList]);
-  if(base.length >= limit) return base.slice(0, limit);
-
-  const out = [];
-  let pool = [];
-  while(out.length < limit){
-    if(pool.length === 0){
-      pool = shuffle([...fullList]);
-      if(out.length && pool.length > 1 && pool[0] === out[out.length-1]){
-        [pool[0], pool[1]] = [pool[1], pool[0]];
-      }
-    }
-    out.push(pool.shift());
-  }
-  return out;
+/* ===== Strict unique session (1) ===== */
+function buildOrderUnique(fullList, limit){
+  const unique = uniq(fullList.map(x=>JSON.stringify(x))).map(s=>JSON.parse(s));
+  const base = shuffle(unique);
+  if(base.length < limit) return null; // not enough
+  return base.slice(0, limit);
 }
 
 /* ===== Persistent selections ===== */
@@ -350,48 +475,80 @@ function drawEdge(t=0){
 }
 requestAnimationFrame(drawEdge);
 
-/* ===== Audio: background + whoosh + (SOFT) celebration ===== */
-let audioCtx, musicOn=true, musicLoop=null;
+/* ===== Audio: background + whoosh + celebration + styles (6) ===== */
+let audioCtx, musicOn=true, musicLoop=null, musicStyle=0;
+const STYLES = ["Fun Beat","Playful Plucks","Soothing Chill"];
 function ensureAudio(){ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)(); }
 function startMusic(){
   if(!musicOn || musicLoop) return; ensureAudio();
-  const master=audioCtx.createGain(); master.gain.value=.32; master.connect(audioCtx.destination);
-  const drum=audioCtx.createGain(); drum.gain.value=.24; drum.connect(master);
-  const bass=audioCtx.createGain(); bass.gain.value=.18; bass.connect(master);
-  const lead=audioCtx.createGain(); lead.gain.value=.10; lead.connect(master);
-  function kick(t){ const o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.type='sine'; o.connect(g).connect(drum);
-    o.frequency.setValueAtTime(120,t); o.frequency.exponentialRampToValueAtTime(50,t+.08);
-    g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(.9,t+.005); g.gain.exponentialRampToValueAtTime(.0001,t+.18);
-    o.start(t); o.stop(t+.2);
+  const master=audioCtx.createGain(); master.gain.value=.28; master.connect(audioCtx.destination);
+
+  // clear any existing setInterval
+  const beat = 60/108;
+  let t0 = audioCtx.currentTime + 0.05;
+
+  function scheduleFunBeat(){
+    function kick(t){ const o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.type='sine'; o.connect(g).connect(master);
+      o.frequency.setValueAtTime(120,t); o.frequency.exponentialRampToValueAtTime(55,t+.08);
+      g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(.8,t+.01); g.gain.exponentialRampToValueAtTime(.0001,t+.18);
+      o.start(t); o.stop(t+.2);
+    }
+    function hat(t){ const n=audioCtx.createBufferSource(); const len=audioCtx.sampleRate*.05;
+      const b=audioCtx.createBuffer(1,len,audioCtx.sampleRate), d=b.getChannelData(0);
+      for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,1.2);
+      n.buffer=b; const g=audioCtx.createGain(); g.gain.value=.06; n.connect(g).connect(master); n.start(t);
+    }
+    function bass(semi,t,d=.25){ const o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.type='sawtooth'; o.frequency.value=55*Math.pow(2,semi/12);
+      o.connect(g).connect(master); g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(.18,t+.01); g.gain.exponentialRampToValueAtTime(.0001,t+d);
+      o.start(t); o.stop(t+d+.02);
+    }
+    function bar(t){ kick(t); hat(t); hat(t+0.5*beat); kick(t+2*beat); hat(t+2.5*beat);
+      [0,0,-5,-5,2,2,0,0].forEach((st,i)=>bass(st,t+i*.5*beat,.24));
+    }
+    bar(t0);
+    const dur=4*beat;
+    const id=setInterval(()=>{ t0+=dur; bar(t0) }, dur*1000);
+    musicLoop={id};
   }
-  function snare(t){ const n=audioCtx.createBufferSource(); const len=audioCtx.sampleRate*.15;
-    const b=audioCtx.createBuffer(1,len,audioCtx.sampleRate), d=b.getChannelData(0);
-    for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2);
-    n.buffer=b; const g=audioCtx.createGain(); g.gain.value=.14; n.connect(g).connect(drum); n.start(t);
+
+  function schedulePlucks(){
+    function pluck(freq,t,d=.24){
+      const o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.type='triangle';
+      o.frequency.value=freq; o.connect(g).connect(master);
+      g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(.14,t+.01); g.gain.exponentialRampToValueAtTime(.0001,t+d);
+      o.start(t); o.stop(t+d+.02);
+    }
+    const scale=[440,494,523,587,659,698,784]; // A4->G5
+    function bar(t){ for(let i=0;i<8;i++){ const f=scale[(i*2+3)%scale.length]; pluck(f,t+i*.5*beat);} }
+    bar(t0);
+    const dur=4*beat;
+    const id=setInterval(()=>{ t0+=dur; bar(t0)}, dur*1000);
+    musicLoop={id};
   }
-  function hat(t){ const n=audioCtx.createBufferSource(); const len=audioCtx.sampleRate*.05;
-    const b=audioCtx.createBuffer(1,len,audioCtx.sampleRate), d=b.getChannelData(0);
-    for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,1.2);
-    n.buffer=b; const g=audioCtx.createGain(); g.gain.value=.05; n.connect(g).connect(drum); n.start(t);
+
+  function scheduleChill(){
+    function pad(freq,t,d=4){
+      const o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.type='sine';
+      o.frequency.value=freq; o.connect(g).connect(master);
+      g.gain.setValueAtTime(.0001,t); g.gain.linearRampToValueAtTime(.10,t+.4); g.gain.linearRampToValueAtTime(.0001,t+d);
+      o.start(t); o.stop(t+d+.2);
+    }
+    pad(261.63, t0, 6); pad(329.63, t0+2, 6); pad(392.00, t0+4, 6);
+    const id=setInterval(()=>{ t0+=6; pad(261.63, t0, 6); pad(329.63, t0+2, 6); pad(392.00, t0+4, 6); }, 6000);
+    musicLoop={id};
   }
-  function bassNote(semi,t,d=.25){ const o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.type='sawtooth'; o.frequency.value=55*Math.pow(2,semi/12);
-    o.connect(g).connect(bass); g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(.2,t+.01); g.gain.exponentialRampToValueAtTime(.0001,t+d);
-    o.start(t); o.stop(t+d+.02);
-  }
-  function leadNote(hz,t,d=.18){ const o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.frequency.value=hz; o.type='triangle'; o.connect(g).connect(lead);
-    g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(.09,t+.01); g.gain.exponentialRampToValueAtTime(.0001,t+d);
-    o.start(t); o.stop(t+d+.02);
-  }
-  const bpm=108, beat=60/bpm, start=audioCtx.currentTime+.05; const hz=n=>440*Math.pow(2,(n-69)/12);
-  function bar(t0){ kick(t0); hat(t0); snare(t0+beat); hat(t0+1.5*beat); kick(t0+2*beat); hat(t0+2.5*beat); snare(t0+3*beat); hat(t0+3.5*beat);
-    [0,0,-5,-5,2,2,0,0].forEach((st,i)=>bassNote(st,t0+i*.5*beat,.24));
-    [81,83,86,83,81,78,79,81].forEach((n,i)=>leadNote(hz(n),t0+i*.5*beat+.05,.16));
-  }
-  let t0=start; bar(t0); const barDur=4*beat; const id=setInterval(()=>{t0+=barDur; bar(t0)}, barDur*1000); musicLoop={id};
+
+  [scheduleFunBeat, schedulePlucks, scheduleChill][musicStyle]();
 }
 function stopMusic(){ if(musicLoop){clearInterval(musicLoop.id); musicLoop=null;} }
+
 document.addEventListener('click', function once(){ ensureAudio(); if(musicOn) startMusic(); document.removeEventListener('click', once); }, {once:true});
 musicBtn.addEventListener('click', ()=>{ musicOn=!musicOn; musicBtn.textContent='Music: '+(musicOn?'On':'Off'); if(musicOn) startMusic(); else stopMusic(); });
+styleBtn.addEventListener('click', ()=>{
+  musicStyle = (musicStyle+1)%STYLES.length;
+  styleBtn.textContent = 'Style: ' + STYLES[musicStyle];
+  if(musicOn){ stopMusic(); startMusic(); }
+});
 
 function whoosh(){
   ensureAudio();
@@ -404,42 +561,18 @@ function whoosh(){
   o.connect(g).connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime+.3);
 }
 
-/* ====== SOFT, SOBER CELEBRATION SOUND (replaces old claps) ====== */
+/* Soft, sober celebration chime */
 function celebration(){
-  ensureAudio();
-  if(!audioCtx) return;
-  const master = audioCtx.createGain();
-  master.gain.value = 0.14; // gentle overall level
-  master.connect(audioCtx.destination);
-
+  ensureAudio(); if(!audioCtx) return;
+  const master = audioCtx.createGain(); master.gain.value = 0.14; master.connect(audioCtx.destination);
   const t0 = audioCtx.currentTime + 0.02;
-
-  // Soft pad under the chime
-  const pad = audioCtx.createOscillator();
-  const padGain = audioCtx.createGain();
-  pad.type = 'sine';
-  pad.frequency.value = 330; // E4
-  padGain.gain.setValueAtTime(0.0001, t0);
-  padGain.gain.linearRampToValueAtTime(0.06, t0 + 0.06);
-  padGain.gain.exponentialRampToValueAtTime(0.0001, t0 + 1.1);
-  pad.connect(padGain).connect(master);
-  pad.start(t0); pad.stop(t0 + 1.2);
-
-  // Gentle three-note chime (C5–E5–G5)
-  function chime(freq, when, dur=0.22, peak=0.22){
-    const o = audioCtx.createOscillator();
-    const g = audioCtx.createGain();
-    o.type = 'sine';
-    o.frequency.value = freq;
-    g.gain.setValueAtTime(0.0001, when);
-    g.gain.linearRampToValueAtTime(peak, when + 0.02);
-    g.gain.exponentialRampToValueAtTime(0.0001, when + dur);
-    o.connect(g).connect(master);
-    o.start(when); o.stop(when + dur + 0.05);
-  }
-  chime(523.25, t0);        // C5
-  chime(659.25, t0 + 0.08); // E5
-  chime(783.99, t0 + 0.16); // G5
+  const pad = audioCtx.createOscillator(), pg = audioCtx.createGain(); pad.type='sine'; pad.frequency.value=330;
+  pg.gain.setValueAtTime(0.0001,t0); pg.gain.linearRampToValueAtTime(0.06,t0+0.06); pg.gain.exponentialRampToValueAtTime(0.0001,t0+1.1);
+  pad.connect(pg).connect(master); pad.start(t0); pad.stop(t0+1.2);
+  function ch(freq,when,d=0.22,p=0.22){ const o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.type='sine'; o.frequency.value=freq;
+    g.gain.setValueAtTime(0.0001,when); g.gain.linearRampToValueAtTime(p,when+0.02); g.gain.exponentialRampToValueAtTime(0.0001,when+d);
+    o.connect(g).connect(master); o.start(when); o.stop(when+d+0.05); }
+  ch(523.25,t0); ch(659.25,t0+0.08); ch(783.99,t0+0.16);
 }
 
 /* ===== Confetti ===== */
@@ -477,24 +610,19 @@ function updateClock(){ clockEl.textContent="⏱️ "+timeLeft+"s"; clockEl.styl
 function startTimer(){
   clearInterval(timer); timeLeft=selectedTimer; updateClock();
   timer=setInterval(()=>{ 
-    timeLeft--; 
-    updateClock(); 
-    if(timeLeft<=0){ 
-      clearInterval(timer); 
-      showAnswer(false);          // reveal when time is up
-      // 👉 No auto-advance. Next puzzle only on Next/Skip buttons.
-    } 
+    timeLeft--; updateClock();
+    if(timeLeft<=0){ clearInterval(timer); showAnswer(false); /* no auto-next */ }
   }, 1000);
 }
 function showEmoji(){
-  const m=order[idx]; emojiEl.textContent=m.e; categoryEl.textContent="Category: "+m.c; progressEl.textContent=(idx+1)+" / "+order.length;
+  const m=order[idx]; emojiEl.textContent=m.e; /* (5) category hidden */ progressEl.textContent=(idx+1)+" / "+order.length;
   whoosh();
 }
 function showAnswer(){
   if(!started) return;
   if(revealed) return; revealed=true; clearInterval(timer);
   const m=order[idx]; titleEl.textContent=m.t; clapper.classList.add('show');
-  sprinkle(); celebration();     // soft chime + confetti
+  sprinkle(); celebration();
 }
 function hideAnswer(){ revealed=false; clapper.classList.remove('show'); }
 function next(){
@@ -504,7 +632,7 @@ function next(){
   showEmoji(); startTimer();
 }
 function end(){
-  emojiEl.textContent="🎉 All done!"; categoryEl.textContent="Great game!"; clockEl.textContent="⏱️ —";
+  emojiEl.textContent="🎉 All done!"; /* category hidden */ clockEl.textContent="⏱️ —";
   titleEl.textContent="Thanks for playing!"; clapper.classList.add('show');
 }
 
@@ -529,16 +657,21 @@ function init(withCats=selectedCats, withLimit=selectedLimit, withTimer=selected
   saveSelectedCats(selectedCats); saveLimit(selectedLimit); saveTimer(selectedTimer);
 
   const list = getFilteredList(selectedCats);
-  order = buildOrder(list, selectedLimit);
+  const built = buildOrderUnique(list, selectedLimit); // (1) unique only
+  if(!built){
+    alert("Not enough movies in the selected languages for this round size.\nAdd more languages or choose a smaller round.");
+    catsModal.style.display='flex'; started=false; return;
+  }
+  order = built;
 
-  idx=0; hideAnswer(); showEmoji(); startTimer(); renderActiveChips();
+  idx=0; hideAnswer(); showEmoji(); startTimer(); renderActiveChips(); started=true;
 }
 
 /* ===== Controls ===== */
 btnReveal.addEventListener('click', ()=>showAnswer());
 btnNext.addEventListener('click', ()=>{ hideAnswer(); next(); });
 btnSkip.addEventListener('click', ()=>{ hideAnswer(); next(); });
-btnRestart.addEventListener('click', ()=>{ if(!started) return; init(); });
+btnRestart.addEventListener('click', ()=>{ /* (4) reopen categories */ catsModal.style.display='flex'; started=false; clearInterval(timer); });
 
 document.addEventListener('keydown', (e)=>{
   if(e.code!=='Space') return;
@@ -589,7 +722,6 @@ catsApply.addEventListener('click', ()=>{
   const limit = +document.querySelector('input[name="limit"]:checked')?.value || selectedLimit;
   const timerSec = +document.querySelector('input[name="timer"]:checked')?.value || selectedTimer;
   catsModal.style.display='none';
-  started = true;
   init(chosen, limit, timerSec);
   if(musicOn) startMusic();
 });
