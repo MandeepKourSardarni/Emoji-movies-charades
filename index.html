@@ -76,19 +76,17 @@
     border-radius:18px; padding:16px; backdrop-filter:blur(10px);
     box-shadow:0 12px 40px rgba(0,0,0,.28), 0 0 0 1px rgba(255,255,255,.06) inset;
   }
-  .toprow{display:grid; grid-template-columns:1fr auto 1fr; align-items:center}
+  .toprow{display:grid; grid-template-columns:1fr auto auto; align-items:center; gap:8px}
   .center{display:none} /* (5) hide category heading */
 
-  /* reduced chips (5) */
-  .timer{
-    min-width:96px; text-align:center; font-weight:900; font-size:clamp(12px,2.6vmin,18px);
-    padding:4px 8px; border-radius:10px; border:1px solid rgba(255,255,255,.25); background:var(--glass2);
+  /* bubbles same width for counter, timer, hint */
+  .timer,.tag,.hint{
+    min-width:150px; text-align:center; font-weight:900; font-size:clamp(12px,2.6vmin,18px);
+    padding:6px 10px; border-radius:10px; border:1px solid rgba(255,255,255,.25); background:var(--glass2);
     box-shadow:0 4px 12px rgba(0,0,0,.18);
   }
-  .tag{
-    padding:4px 8px; border-radius:10px; font-weight:800; font-size:clamp(11px,2.4vmin,16px);
-    border:1px solid rgba(255,255,255,.25); background:var(--glass2); box-shadow:0 4px 12px rgba(0,0,0,.15)
-  }
+  .tag{font-weight:800; font-size:clamp(11px,2.4vmin,16px)}
+  .metaR{display:flex; gap:8px; justify-content:flex-end; align-items:center}
 
   .emoji{font-size:clamp(54px,12.5vmin,120px); line-height:1.1; text-align:center; white-space:pre-wrap; text-shadow:0 5px 16px rgba(0,0,0,.5); padding:10px 8px}
 
@@ -107,6 +105,34 @@
 
   .controls{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:4px}
   .controls .pill{min-width:150px; text-align:center; font-size:18px} /* (3) bigger buttons */
+
+  /* 3D / neon only for bottom buttons */
+  .btn3d{
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.06)) ,
+      var(--glass);
+    border:1px solid rgba(255,255,255,.28);
+    box-shadow:
+      0 10px 18px rgba(0,0,0,.35),
+      0 0 10px rgba(255,212,0,.18),
+      inset 0 1px 0 rgba(255,255,255,.25),
+      inset 0 -4px 12px rgba(0,0,0,.25);
+    text-shadow:0 1px 0 rgba(0,0,0,.35);
+    transition:transform .06s ease, box-shadow .12s ease, filter .15s ease;
+  }
+  .btn3d:hover{filter:brightness(1.1); box-shadow:
+      0 14px 24px rgba(0,0,0,.38),
+      0 0 14px rgba(255,212,0,.28),
+      inset 0 1px 0 rgba(255,255,255,.28),
+      inset 0 -4px 12px rgba(0,0,0,.28);}
+  .btn3d:active{
+    transform:translateY(2px);
+    box-shadow:
+      0 6px 12px rgba(0,0,0,.35),
+      0 0 8px rgba(255,212,0,.22),
+      inset 0 1px 0 rgba(255,255,255,.18),
+      inset 0 -2px 8px rgba(0,0,0,.35);
+  }
 
   footer{opacity:.9; font-size:14px; text-align:center; padding-bottom:8px}
 
@@ -138,7 +164,7 @@
       <div class="ctrl-right">
         <div class="pill">Space: Reveal • Double-Space: Next</div>
         <button id="musicBtn" class="pill">Music: On</button>
-        <button id="styleBtn" class="pill">Style: Fun Beat</button> <!-- (6) music styles -->
+        <button id="styleBtn" class="pill">Style: Fun Beat</button>
         <button id="shuffleBtn" class="pill">Shuffle</button>
         <button id="catsBtn" class="pill">Categories & Rounds</button>
         <button id="rulesBtn" class="pill">Rules</button>
@@ -152,7 +178,10 @@
         <div class="toprow">
           <div class="metaL"><div id="progress" class="tag">1 / 150</div></div>
           <div class="center"><div id="category" class="category">Category: —</div></div> <!-- hidden by CSS -->
-          <div class="metaR"><div id="clock" class="timer">⏱️ —</div></div>
+          <div class="metaR">
+            <div id="clock" class="timer">⏱️ —</div>
+            <div id="hint" class="hint">HINT: —</div>
+          </div>
         </div>
 
         <div id="emoji" class="emoji">🎬😀</div>
@@ -165,10 +194,10 @@
         </div>
 
         <div class="controls">
-          <button id="reveal"  class="pill">Reveal Answer</button>
-          <button id="nextBtn" class="pill">Next</button>
-          <button id="skip"    class="pill">Skip</button>
-          <button id="restart" class="pill">Restart</button>
+          <button id="reveal"  class="pill btn3d">Reveal Answer</button>
+          <button id="nextBtn" class="pill btn3d">Next</button>
+          <button id="skip"    class="pill btn3d">Skip</button>
+          <button id="restart" class="pill btn3d">Restart</button>
         </div>
       </section>
     </main>
@@ -230,44 +259,44 @@
 /* Existing + 20 more per language (no duplicates with prior list) */
 const MOVIES = [
   /* Hindi (existing) */
-  {t:"3 Idiots", e:"🎓🧠🤪👨‍🎓", c:"Hindi movie"},
+  {t:"3 Idiots", e:"🎓🧠📸📚👦👦👦📏🛵👩‍⚕️", c:"Hindi movie"},
   {t:"Dangal", e:"🥇🤼‍♀️👨‍👧‍👧", c:"Hindi movie"},
   {t:"Pathaan", e:"🕶️🛩️❄️💥", c:"Hindi movie"},
   {t:"Jawan", e:"🛤️🕶️🎭💥", c:"Hindi movie"},
-  {t:"Brahmāstra", e:"🔥🪄🔱🌌", c:"Hindi movie"},
+  {t:"Brahmāstra", e:"🔥🪄🔱🌌 ", c:"Hindi movie"},
   {t:"Gully Boy", e:"🎤🧢🚇🔥", c:"Hindi movie"},
   /* Hindi (+20) */
-  {t:"Animal", e:"🐯🩸💼", c:"Hindi movie"},
+  {t:"Animal", e:"🐯🩸⚔️", c:"Hindi movie"},
   {t:"Gadar 2", e:"🇮🇳🚂💥", c:"Hindi movie"},
   {t:"Dunki", e:"✈️🌍👴🏻😂", c:"Hindi movie"},
   {t:"Shershaah", e:"🎖️🏔️🇮🇳", c:"Hindi movie"},
   {t:"Andhadhun", e:"🎹😵‍💫🕶️", c:"Hindi movie"},
   {t:"Stree", e:"👻🏘️😂", c:"Hindi movie"},
-  {t:"Article 15", e:"👮‍♂️📜⚖️", c:"Hindi movie"},
-  {t:"Drishyam 2 (Hin)", e:"👨‍👩‍👧‍👦📼🕵️", c:"Hindi movie"},
-  {t:"Rocky Aur Rani Kii Prem Kahaani", e:"💃🕺❤️👗", c:"Hindi movie"},
-  {t:"12th Fail", e:"📚📝💪", c:"Hindi movie"},
-  {t:"PK", e:"🛸👽❓", c:"Hindi movie"},
+  {t:"Article 15", e:"👮‍♂️📜⚖️🧑‍⚖️", c:"Hindi movie"},
+  {t:"Drishyam 2 (Hin)", e:"👨‍👩‍👧‍👦📼🚗👮🕵️", c:"Hindi movie"},
+  {t:"Rocky Aur Rani Kii Prem Kahaani", e:"💃📰🕺🚘❤️👗", c:"Hindi movie"},
+  {t:"12th Fail", e:"📚📝👮", c:"Hindi movie"},
+  {t:"PK", e:"🛸👽❓🔷", c:"Hindi movie"},
   {t:"OMG 2", e:"🕉️📚👨‍🏫", c:"Hindi movie"},
   {t:"Bhool Bhulaiyaa 2", e:"🏚️👻😂", c:"Hindi movie"},
   {t:"Tiger 3", e:"🐯🕵️‍♂️💥", c:"Hindi movie"},
-  {t:"Sooryavanshi", e:"🚔💥🏍️", c:"Hindi movie"},
-  {t:"Crew", e:"✈️👩‍✈️💄", c:"Hindi movie"},
-  {t:"Munjya", e:"👻🌴😂", c:"Hindi movie"},
-  {t:"Laapataa Ladies", e:"👰‍♀️🔍🚌", c:"Hindi movie"},
+  {t:"Sooryavanshi", e:"🌞🚔💥🚗💥🚘💥🚓💥🏍️💥", c:"Hindi movie"},
+  {t:"Crew", e:"✈️👩‍✈️👩‍✈️👩‍✈️🪙🪙🪙💄💅", c:"Hindi movie"},
+  {t:"Munjya", e:"👻🌴😈😂", c:"Hindi movie"},
+  {t:"Laapataa Ladies", e:"👰🏼👰🏼🚌🔍👮", c:"Hindi movie"},
   {t:"Bhediya", e:"🌕🐺🧪", c:"Hindi movie"},
-  {t:"Brahmanandam? No, Hera Pheri (classic)", e:"☎️💸😂", c:"Hindi movie"},
+  {t:"Hera Pheri", e:"☎️💸🥸🤠🤓", c:"Hindi movie"},
 
   /* English (existing) */
-  {t:"Oppenheimer", e:"🔬☢️🕶️💥", c:"English movie"},
-  {t:"Barbie", e:"🎀👱‍♀️🏙️💖", c:"English movie"},
+  {t:"Oppenheimer", e:"🔬☢️🕶️💥💥💥💥", c:"English movie"},
+  {t:"Barbie", e:"👱‍♀️💄💅🎀", c:"English movie"},
   {t:"Dune: Part Two", e:"🏜️🐛👑⚔️", c:"English movie"},
   {t:"Top Gun: Maverick", e:"✈️🕶️🔥🎖️", c:"English movie"},
-  {t:"Inside Out 2", e:"😀😢😠😨🤢🧠2️⃣", c:"English movie"},
+  {t:"Inside Out", e:"😀😢😠😨🤢🧠", c:"English movie"},
   /* English (+20) */
-  {t:"Deadpool & Wolverine", e:"🗡️🧪🧸😏", c:"English movie"},
+  {t:"Deadpool & Wolverine", e:"🐺🗡️🧪😵🏊🏼😏🧸", c:"English movie"},
   {t:"Spider-Man: Across the Spider-Verse", e:"🕷️🕸️🌀", c:"English movie"},
-  {t:"Guardians of the Galaxy Vol. 3", e:"🦝🌌🎵", c:"English movie"},
+  {t:"Guardians of the Galaxy", e:"🦝🌌🌴🚀🎵", c:"English movie"},
   {t:"The Super Mario Bros. Movie", e:"🍄👨‍🔧⭐", c:"English movie"},
   {t:"Wonka", e:"🍫🎩✨", c:"English movie"},
   {t:"Avatar: The Way of Water", e:"🌊🔵🐉", c:"English movie"},
@@ -284,8 +313,7 @@ const MOVIES = [
   {t:"Napoleon", e:"👑⚔️🇫🇷", c:"English movie"},
   {t:"The Little Mermaid (2023)", e:"🧜‍♀️🌊🎶", c:"English movie"},
   {t:"The Marvels", e:"✨🦸‍♀️🪐", c:"English movie"},
-  {t:"Oppenheimer… (already added) — skip", e:"", c:"English movie"}, /* dummy to show no dupes; ignored in filtering */
-
+  
   /* Kannada (existing) */
   {t:"Kantara", e:"🌾🛕🕺🔥", c:"Kannada movie"},
   {t:"777 Charlie", e:"🐶🚗❤️", c:"Kannada movie"},
@@ -309,7 +337,7 @@ const MOVIES = [
   {t:"Sapta Sagaradaache Ello: Side A", e:"🌊💑🎧", c:"Kannada movie"},
   {t:"Sapta Sagaradaache Ello: Side B", e:"🌊💔🎧", c:"Kannada movie"},
   {t:"Kirik Party", e:"🎓🎉💘", c:"Kannada movie"},
-  {t:"Charlie 777… (already added) — skip", e:"", c:"Kannada movie"}, /* placeholder, filtered away */
+  {t:"Charlie 777… (already added) — skip", e:"", c:"Kannada movie"},
   {t:"Godhi Banna Sadharana Mykattu", e:"🧓🧠🧣", c:"Kannada movie"},
 
   /* Telugu (existing) */
@@ -396,6 +424,7 @@ const emojiEl = document.getElementById('emoji');
 const categoryEl = document.getElementById('category');
 const progressEl = document.getElementById('progress');
 const clockEl = document.getElementById('clock');
+const hintEl = document.getElementById('hint');
 const clapper = document.getElementById('clapper');
 const titleEl = document.getElementById('movieTitle');
 
@@ -431,8 +460,9 @@ const TIMERS = [10,12,15,20];
 function getFilteredList(cats){
   return MOVIES
     .filter(m=>cats.includes(m.c))
-    .filter(m=>m.e && m.t && m.t.indexOf("… (already added)")===-1); // drop placeholders
+    .filter(m=>m.e && m.t && m.t.indexOf("… (already added)")===-1);
 }
+function langFromCategory(c){ return (c||'').replace(/\s*movie\s*$/i,''); }
 
 /* ===== Strict unique session (1) ===== */
 function buildOrderUnique(fullList, limit){
@@ -475,15 +505,14 @@ function drawEdge(t=0){
 }
 requestAnimationFrame(drawEdge);
 
-/* ===== Audio: background + whoosh + celebration + styles (6) ===== */
+/* ===== Audio: background + whoosh + celebration (Soothing removed) ===== */
 let audioCtx, musicOn=true, musicLoop=null, musicStyle=0;
-const STYLES = ["Fun Beat","Playful Plucks","Soothing Chill"];
+const STYLES = ["Fun Beat","Playful Plucks"]; // removed "Soothing Chill"
 function ensureAudio(){ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)(); }
 function startMusic(){
   if(!musicOn || musicLoop) return; ensureAudio();
   const master=audioCtx.createGain(); master.gain.value=.28; master.connect(audioCtx.destination);
 
-  // clear any existing setInterval
   const beat = 60/108;
   let t0 = audioCtx.currentTime + 0.05;
 
@@ -526,19 +555,7 @@ function startMusic(){
     musicLoop={id};
   }
 
-  function scheduleChill(){
-    function pad(freq,t,d=4){
-      const o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.type='sine';
-      o.frequency.value=freq; o.connect(g).connect(master);
-      g.gain.setValueAtTime(.0001,t); g.gain.linearRampToValueAtTime(.10,t+.4); g.gain.linearRampToValueAtTime(.0001,t+d);
-      o.start(t); o.stop(t+d+.2);
-    }
-    pad(261.63, t0, 6); pad(329.63, t0+2, 6); pad(392.00, t0+4, 6);
-    const id=setInterval(()=>{ t0+=6; pad(261.63, t0, 6); pad(329.63, t0+2, 6); pad(392.00, t0+4, 6); }, 6000);
-    musicLoop={id};
-  }
-
-  [scheduleFunBeat, schedulePlucks, scheduleChill][musicStyle]();
+  [scheduleFunBeat, schedulePlucks][musicStyle]();
 }
 function stopMusic(){ if(musicLoop){clearInterval(musicLoop.id); musicLoop=null;} }
 
@@ -607,6 +624,10 @@ let selectedTimer = loadTimer();
 
 /* ===== Flow ===== */
 function updateClock(){ clockEl.textContent="⏱️ "+timeLeft+"s"; clockEl.style.background=timeLeft<=5?"rgba(255,123,123,.3)":"var(--glass2)"; }
+function updateHint(){
+  const m = order[idx];
+  hintEl.textContent = "HINT: " + (m ? langFromCategory(m.c) : "—");
+}
 function startTimer(){
   clearInterval(timer); timeLeft=selectedTimer; updateClock();
   timer=setInterval(()=>{ 
@@ -615,7 +636,8 @@ function startTimer(){
   }, 1000);
 }
 function showEmoji(){
-  const m=order[idx]; emojiEl.textContent=m.e; /* (5) category hidden */ progressEl.textContent=(idx+1)+" / "+order.length;
+  const m=order[idx]; emojiEl.textContent=m.e; progressEl.textContent=(idx+1)+" / "+order.length;
+  updateHint();
   whoosh();
 }
 function showAnswer(){
@@ -632,7 +654,8 @@ function next(){
   showEmoji(); startTimer();
 }
 function end(){
-  emojiEl.textContent="🎉 All done!"; /* category hidden */ clockEl.textContent="⏱️ —";
+  emojiEl.textContent="🎉 All done!"; clockEl.textContent="⏱️ —";
+  hintEl.textContent="HINT: —";
   titleEl.textContent="Thanks for playing!"; clapper.classList.add('show');
 }
 
@@ -657,7 +680,7 @@ function init(withCats=selectedCats, withLimit=selectedLimit, withTimer=selected
   saveSelectedCats(selectedCats); saveLimit(selectedLimit); saveTimer(selectedTimer);
 
   const list = getFilteredList(selectedCats);
-  const built = buildOrderUnique(list, selectedLimit); // (1) unique only
+  const built = buildOrderUnique(list, selectedLimit);
   if(!built){
     alert("Not enough movies in the selected languages for this round size.\nAdd more languages or choose a smaller round.");
     catsModal.style.display='flex'; started=false; return;
@@ -671,7 +694,7 @@ function init(withCats=selectedCats, withLimit=selectedLimit, withTimer=selected
 btnReveal.addEventListener('click', ()=>showAnswer());
 btnNext.addEventListener('click', ()=>{ hideAnswer(); next(); });
 btnSkip.addEventListener('click', ()=>{ hideAnswer(); next(); });
-btnRestart.addEventListener('click', ()=>{ /* (4) reopen categories */ catsModal.style.display='flex'; started=false; clearInterval(timer); });
+btnRestart.addEventListener('click', ()=>{ catsModal.style.display='flex'; started=false; clearInterval(timer); });
 
 document.addEventListener('keydown', (e)=>{
   if(e.code!=='Space') return;
@@ -727,7 +750,7 @@ catsApply.addEventListener('click', ()=>{
 });
 
 /* ===== Boot: open the categories modal first ===== */
-window.addEventListener('load', ()=>{ document.getElementById('clock').textContent='⏱️ '+selectedTimer+'s'; catsModal.style.display='flex'; });
+window.addEventListener('load', ()=>{ document.getElementById('clock').textContent='⏱️ '+selectedTimer+'s'; document.getElementById('hint').textContent='HINT: —'; catsModal.style.display='flex'; });
 </script>
 </body>
 </html>
