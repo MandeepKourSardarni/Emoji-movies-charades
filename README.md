@@ -1,157 +1,72 @@
 # Emoji Charades — Movies 😍🥰⭐👍😊😉
 
-
-[ Guess the movie name ]
-
-A family-friendly, projector-ready **emoji movie guessing game**
-Pick one or more categories (English / Hindi / Kannada / Telugu / Malayalam / Tamil), choose how many movies to play (10 / 20 / 30 / 50), and let the 12-second timer begin. Reveal with **Space**, go **Next** with **double-Space**. Includes confetti, soft celebration claps, ambient background music, and responsive UI for phones and large screens
+A fast, family-friendly emoji movie guessing game you can run in any modern browser.  
+Pick languages (English/Hindi/Kannada/Telugu/Malayalam/Tamil), choose the round size and timer, and let players guess the movie from emojis. Press **Space** to reveal, **Double-Space** (or **Next**) to move on. Includes subtle background music (2 styles), confetti celebration, a centered **HINT** bubble showing the movie’s language, and a clean neon/3D button aesthetic.
 
 **Live demo (GitHub Pages):**  
 [Play Emoji Charades](https://mandeepkoursardarni.github.io/Emoji-movies-charades/)
 
-## Preview
-
-<div align="center">
-  <img src="MovieChallenge1.png" alt="Emoji Charades Screenshot 1" width="800"/>
-  <br/><br/>
-  <img src="MovieChallenge2.png" alt="Emoji Charades Screenshot 2" width="800"/>
-</div>
-
-
 ---
 
-## Features
-- 🎭 **Emoji puzzles** for popular movies across 6 languages.  
-- 🗂️ **Categories & Rounds** modal: choose languages and 10/20/30/50 rounds.  
-- ⏱️ **12s timer** per puzzle with clear visual cues.  
-- ⌨️ **Controls**:  
+## ✨ Features
+
+- **Multiple languages**: English, Hindi, Kannada, Telugu, Malayalam, Tamil  
+- **Centered HINT bubble**: Shows the current movie’s **language**  
+- **Rounds & timer**: 10/20/30/50 rounds; 10/12/15/20-second timer  
+- **Unique order**: No repeats within a session  
+- **Controls**:  
   - **Space** → Reveal answer  
   - **Double-Space** → Next puzzle  
-- 🎉 **Confetti + soft claps** on reveal (pleasant in halls/laptops).  
-- 🎵 **Ambient background music** with on/off toggle.  
-- 🔀 **Shuffle** and **Restart** buttons.  
-- 📱 **Responsive** design (mobile, tablet, projector).
+  - Buttons: **Reveal**, **Next**, **Skip**, **Restart**  
+- **Music (Web Audio)**: 2 styles — *Fun Beat* and *Playful Plucks*  
+- **Celebration**: Confetti + soft chime on reveal  
+- **Aesthetics**: Neon 3D bottom buttons, glassmorphism, responsive layout  
+- **Projector/mobile ready**: Scales nicely from phones to big screens  
+- **Local persistence**: Saves selected categories, round size, and timer in `localStorage`  
 
 ---
 
-## How to Run Locally
-Just open the file in a browser:
-1. Download/clone this repository.  
-2. Double-click `index.html` to open in Chrome/Edge/Firefox/Safari.
+## 📦 Tech Stack
 
-> Note: Browsers may block audio auto-play until the first click. As soon as you click anywhere, sound will work.
-
----
-
-## How to Play
-1. On load, the **Categories & Rounds** popup appears. Select languages and how many rounds to play, then click **Apply & Start**.  
-2. Guess the movie from the emojis before the **12s timer** ends.  
-3. Press **Space** (or click **Reveal Answer**) to show the answer on the clapper.  
-4. **Double-Space** (or click **Next/Skip**) to move to next puzzle.  
-5. Use **Shuffle** anytime to reshuffle the order for a new run.
+- **HTML/CSS/JS** only (vanilla)  
+- **Web Audio API** for music/SFX  
+- **Canvas** for confetti & edge lights  
+- **No external build/deps** — drop-in static file  
 
 ---
 
-## Controls Summary
-- **Space** → Reveal answer  
+## 🚀 Quick Start
+
+1. Clone or download this repo.  
+2. Open `index.html` in Chrome/Edge/Firefox/Safari.  
+3. The **Categories & Rounds** dialog opens automatically:  
+   - Choose languages, round size, and timer.  
+   - Click **Apply & Start**.  
+4. Use **Space** to reveal, **Double-Space** (or **Next**) to proceed.  
+
+> Tip: If audio doesn’t start automatically, click anywhere once (browser gesture unlocks audio).  
+
+---
+
+## 🎮 Controls & UI
+
+- **Space** → Reveal the movie title  
 - **Double-Space** → Next puzzle  
-- Buttons: Reveal Answer, Next, Skip, Restart, Shuffle, Music On/Off, Categories & Rounds, Rules
+- **Reveal/Next/Skip/Restart** → Bottom neon buttons  
+- **Music On/Off** + **Style** toggle → Top controls  
+- **Shuffle** → Rebuild current session (keeps your settings)  
+- **HINT** → Center top bubble showing the **language** for the current emoji puzzle  
+- **Counter & Timer** → Same-size bubbles for visual balance  
 
 ---
 
-## Files
-- `index.html` — the entire app (HTML + CSS + JS).  
-- `screenshot.png` — optional screenshot for the repo.
+## ⚙️ Configuration
 
----
+All data lives inside `index.html`:
 
-## Deploy to GitHub Pages
-1. Push this repo to GitHub.  
-2. Go to **Settings → Pages**.  
-3. Under **Source**, choose **Deploy from a branch** → `main` branch → `/ (root)`.  
-4. Save. After a short build, your site appears at:  
-   [https://mandeepkoursardarni.github.io/Emoji-movies-charades/](https://mandeepkoursardarni.github.io/Emoji-movies-charades/)
+```js
+{ t: "Movie Title", e: "🎬🍿✨", c: "Hindi movie" }
 
----
-
-## Notes
-- This project has **no license** by default (all rights reserved).  
-- Audio is synthesized via Web Audio API (no external audio files), so works offline once opened.
-
----
-
-## Credits
-- UX and code crafted for group fun: parties, classrooms, and quick office sessions.  
-- Emoji art uses standard Unicode emojis supported by modern browsers.
-
-Enjoy! 🎬✨
-
-
-
-
-## Features
-- 🎭 **Emoji puzzles** for popular movies across 6 languages.  
-- 🗂️ **Categories & Rounds** modal: choose languages and 10/20/30/50 rounds.  
-- ⏱️ **12s timer** per puzzle with clear visual cues.  
-- ⌨️ **Controls**:  
-  - **Space** → Reveal answer  
-  - **Double-Space** → Next puzzle  
-- 🎉 **Confetti + soft claps** on reveal (pleasant in halls/laptops).  
-- 🎵 **Ambient background music** with on/off toggle.  
-- 🔀 **Shuffle** and **Restart** buttons.  
-- 📱 **Responsive** design (mobile, tablet, projector).
-
----
-
-## How to Run Locally
-Just open the file in a browser:
-1. Download/clone this repository.  
-2. Double-click `index.html` to open in Chrome/Edge/Firefox/Safari.
-
-> Note: Browsers may block audio auto-play until the first click. As soon as you click anywhere, sound will work.
-
----
-
-## How to Play
-1. On load, the **Categories & Rounds** popup appears. Select languages and how many rounds to play, then click **Apply & Start**.  
-2. Guess the movie from the emojis before the **12s timer** ends.  
-3. Press **Space** (or click **Reveal Answer**) to show the answer on the clapper.  
-4. **Double-Space** (or click **Next/Skip**) to move to next puzzle.  
-5. Use **Shuffle** anytime to reshuffle the order for a new run.
-
----
-
-## Controls Summary
-- **Space** → Reveal answer  
-- **Double-Space** → Next puzzle  
-- Buttons: Reveal Answer, Next, Skip, Restart, Shuffle, Music On/Off, Categories & Rounds, Rules
-
----
-
-## Files
-- `index.html` — the entire app (HTML + CSS + JS).  
-- `screenshot.png` — optional screenshot for the repo.
-
----
-
-## Deploy to GitHub Pages
-1. Push this repo to GitHub.  
-2. Go to **Settings → Pages**.  
-3. Under **Source**, choose **Deploy from a branch** → `main` branch → `/ (root)`.  
-4. Save. After a short build, your site appears at:  
-   [https://mandeepkoursardarni.github.io/Emoji-movies-charades/](https://mandeepkoursardarni.github.io/Emoji-movies-charades/)
-
----
-
-## Notes
-- This project has **no license** by default (all rights reserved).  
-- Audio is synthesized via Web Audio API (no external audio files), so works offline once opened.
-
----
-
-## Credits
-- UX and code crafted for group fun: parties, classrooms, and quick office sessions.  
-- Emoji art uses standard Unicode emojis supported by modern browsers.
 
 Enjoy! 🎬✨
 
