@@ -55,7 +55,7 @@
 
   header{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; text-align:center}
   h1{
-    font-weight:900; letter-spacing:.3px; font-size:clamp(26px,5vmin,44px); color:var(--accent);
+    font-weight:900; letter-spacing:.3px; font-size:clamp(20px,5vmin,44px); color:var(--accent);
     text-shadow:0 1px 0 rgba(0,0,0,.35),0 2px 0 rgba(0,0,0,.25),0 0 12px rgba(255,212,0,.45),0 0 24px rgba(255,212,0,.35);
   }
   .ctrl-right{display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap}
@@ -81,11 +81,11 @@
 
   /* bubbles same width for counter, timer, hint */
   .timer,.tag,.hint{
-    min-width:150px; text-align:center; font-weight:900; font-size:clamp(12px,2.6vmin,18px);
+    min-width:150px; text-align:center; font-weight:700; font-size:clamp(8px,2.6vmin,18px);
     padding:6px 10px; border-radius:10px; border:1px solid rgba(255,255,255,.25); background:var(--glass2);
     box-shadow:0 4px 12px rgba(0,0,0,.18);
   }
-  .tag{font-weight:800; font-size:clamp(11px,2.4vmin,16px)}
+  .tag{font-weight:900; font-size:clamp(8px,2.4vmin,16px)}
   .metaR{display:flex; gap:8px; justify-content:flex-end; align-items:center}
 
   .emoji{font-size:clamp(54px,12.5vmin,120px); line-height:1.1; text-align:center; white-space:pre-wrap; text-shadow:0 5px 16px rgba(0,0,0,.5); padding:10px 8px}
@@ -211,7 +211,7 @@
       <h3>Emoji Charades — Quick Rules</h3>
       <ul>
         <li>Each round shows emojis for a <b>popular movie</b>. Languages: <b>English, Hindi, Kannada, Telugu, Malayalam, Tamil</b>.</li>
-        <li>Use <b>Categories & Rounds</b> to set languages, round size (10/20/30/50), and timer (10s/12s/15s/20s).</li>
+        <li>Use <b>Categories & Rounds</b> to set languages, round size (10/20/30), and timer (10s/12s/15s/20s).</li>
         <li><b>Space</b> = Reveal • <b>Double-Space</b> = Next.</li>
       </ul>
       <div class="modal-actions">
@@ -235,7 +235,6 @@
         <label class="limit-pill"><input type="radio" name="limit" value="10"> 10</label>
         <label class="limit-pill"><input type="radio" name="limit" value="20"> 20</label>
         <label class="limit-pill"><input type="radio" name="limit" value="30"> 30</label>
-        <label class="limit-pill"><input type="radio" name="limit" value="50"> 50</label>
       </div>
 
       <!-- Timer picker -->
@@ -277,7 +276,7 @@ const MOVIES = [
   {t:"Rocky Aur Rani Kii Prem Kahaani", e:"💃📰🕺🚘❤️👗", c:"Hindi movie"},
   {t:"12th Fail", e:"📚📝👮", c:"Hindi movie"},
   {t:"PK", e:"🛸👽❓🔷", c:"Hindi movie"},
-  {t:"OMG 2", e:"🕉️📚👨‍🏫", c:"Hindi movie"},
+  {t:"OMG", e:"🕉️📚👨‍🏫", c:"Hindi movie"},
   {t:"Bhool Bhulaiyaa 2", e:"🏚️👻😂", c:"Hindi movie"},
   {t:"Tiger 3", e:"🐯🕵️‍♂️💥", c:"Hindi movie"},
   {t:"Sooryavanshi", e:"🌞🚔💥🚗💥🚘💥🚓💥🏍️💥", c:"Hindi movie"},
@@ -288,31 +287,57 @@ const MOVIES = [
   {t:"Hera Pheri", e:"☎️💸🥸🤠🤓", c:"Hindi movie"},
 
   /* English (existing) */
-  {t:"Oppenheimer", e:"🔬☢️🕶️💥💥💥💥", c:"English movie"},
-  {t:"Barbie", e:"👱‍♀️💄💅🎀", c:"English movie"},
-  {t:"Dune: Part Two", e:"🏜️🐛👑⚔️", c:"English movie"},
-  {t:"Top Gun: Maverick", e:"✈️🕶️🔥🎖️", c:"English movie"},
+   {t:"Dune", e:"🧙🐉🎬🏜️", c:"English movie"},
   {t:"Inside Out", e:"😀😢😠😨🤢🧠", c:"English movie"},
-  /* English (+20) */
-  {t:"Deadpool & Wolverine", e:"🐺🗡️🧪😵🏊🏼😏🧸", c:"English movie"},
-  {t:"Spider-Man: Across the Spider-Verse", e:"🕷️🕸️🌀", c:"English movie"},
-  {t:"Guardians of the Galaxy", e:"🦝🌌🌴🚀🎵", c:"English movie"},
-  {t:"The Super Mario Bros. Movie", e:"🍄👨‍🔧⭐", c:"English movie"},
-  {t:"Wonka", e:"🍫🎩✨", c:"English movie"},
-  {t:"Avatar: The Way of Water", e:"🌊🔵🐉", c:"English movie"},
-  {t:"John Wick: Chapter 4", e:"🖤🔫⛪", c:"English movie"},
-  {t:"Mission: Impossible – Dead Reckoning Part One", e:"🎭💥🪂", c:"English movie"},
-  {t:"The Batman", e:"🦇🌃🕵️", c:"English movie"},
-  {t:"Elemental", e:"🔥💧🌬️🌱", c:"English movie"},
-  {t:"Kung Fu Panda 4", e:"🐼🥋🍜", c:"English movie"},
-  {t:"Furiosa", e:"🚗🔥🌪️", c:"English movie"},
-  {t:"Godzilla x Kong: The New Empire", e:"🦍🦖⚡", c:"English movie"},
-  {t:"A Quiet Place: Day One", e:"🤫👂🏙️", c:"English movie"},
-  {t:"The Fall Guy", e:"🎬🧨🛻", c:"English movie"},
-  {t:"Twisters", e:"🌪️🚗📸", c:"English movie"},
-  {t:"Napoleon", e:"👑⚔️🇫🇷", c:"English movie"},
-  {t:"The Little Mermaid (2023)", e:"🧜‍♀️🌊🎶", c:"English movie"},
-  {t:"The Marvels", e:"✨🦸‍♀️🪐", c:"English movie"},
+  {t:"Guardians of the Galaxy", e:"🎵🚀🧙🌊", c:"English movie"},
+  {t:"Spider-Man: Across the Spider-Verse", e:"🕷️🎬🌟🧠", c:"English movie"},
+  {t:"Avatar", e:"🧙🌊🎵🧜‍♀️", c:"English movie"},
+  {t:"John Wick", e:"🦇🎬🧠🎵", c:"English movie"},
+  {t:"Mission: Impossible – Fallout", e:"🧙🎬🕷️🧠", c:"English movie"},
+  {t:"Black Panther", e:"🕷️🐅👑🌟", c:"English movie"},
+  {t:"Coco", e:"🎵🎸💀☠️💀☠️💀☠️", c:"English movie"},
+  {t:"Ratatouille", e:"🐀🍝👨🏼‍🍳", c:"English movie"},
+  {t:"Up", e:"🏠🪂👴🏼👶🏼🦚🐕", c:"English movie"},
+  {t:"Toy Story", e:"🧸🪀🦸🏽🥔🥔🎬🌟", c:"English movie"},
+  {t:"Finding Nemo", e:"🌊🐠🐡🐡🔍", c:"English movie"},
+  {t:"Finding Dory", e:"🌊🔍🐠", c:"English movie"},
+  {t:"The Incredibles", e:"🦸🦸🦸🦸🦸🌟", c:"English movie"},
+  {t:"Frozen", e:"👩‍👦🥶❄️⛄", c:"English movie"},
+  {t:"Frozen II", e:"👩‍👦🥶❄️⛄🦬🧑🏻‍❤️‍👩🏻", c:"English movie"},
+  {t:"Moana", e:"🌊🟢👵🏼👧🏽💪🏽👨🏽‍🦱🌴🐓🥥", c:"English movie"},
+  {t:"Encanto", e:"🎵🎬🧠🌟👵🏼👧🏼👨🏽‍🦱👧🏽🧑🏻‍❤️‍👩🏻🪄🏯", c:"English movie"},
+  {t:"Zootopia", e:"🦊🐰🦁🐏🫎🐘🧘🏽‍♀️", c:"English movie"},
+  {t:"The Lion King", e:"🦁👑🦁", c:"English movie"},
+  {t:"Aladdin (2019)", e:"🧙🪔🐫🌵🏜️🏝️🌼", c:"English movie"},
+  {t:"Beauty and the Beast", e:"🏰👿👧🏻🦬📚", c:"English movie"},
+  {t:"Cinderella (2015)", e:"👑🎃🪄🧝🏻👧🏻👑", c:"English movie"},
+  {t:"Harry Potter and the Sorcerer's Stone", e:"🪄🪄🪄🦉🧙🏻", c:"English movie"},
+  {t:"Harry Potter and the Chamber of Secrets", e:"🪄🪄🪄🦉🐍", c:"English movie"},
+  {t:"Harry Potter and the Prisoner of Azkaban", e:"🪄🪄🪄🦉🧔🏻‍♂️🐺", c:"English movie"},
+  {t:"Harry Potter and the Goblet of Fire", e:"🪄🪄🪄🦉🔥🐲", c:"English movie"},
+  {t:"Harry Potter and the Half-Blood Prince", e:"🪄🪄🪄🦉🌓🩸👑", c:"English movie"},
+  {t:"Harry Potter and the Deathly Hallows: Part 1", e:"🪄🪄🧑🏻‍❤️‍👩🏻🪄🦉👴🏻🧙🏻‍♂️😵", c:"English movie"},
+  {t:"Harry Potter and the Deathly Hallows: Part 2", e:"🪄💥🪄💥🪄🦉🥳", c:"English movie"},
+  {t:"The Lord of the Rings: The Fellowship of the Ring", e:"💍💍🐉🎬🏰🧙", c:"English movie"},
+  {t:"The Lord of the Rings: The Two Towers", e:"💍💍🐉🎬🏰🧙", c:"English movie"},
+  {t:"The Lord of the Rings: The Return of the King", e:"💍💍🐉🎬🏰👑", c:"English movie"},
+  {t:"Jurassic Park", e:"🦖🎬🌟🍿", c:"English movie"},
+  {t:"Home Alone", e:"🏠🚶🏻‍➡️", c:"English movie"},
+  {t:"Ghostbusters", e:"🦇💀☠️💥", c:"English movie"},
+  {t:"The Karate Kid", e:"🥋👶🏻", c:"English movie"},
+  {t:"Matilda", e:"👧🏽🎂🏫🚗🪄", c:"English movie"},
+  {t:"Shrek", e:"👽👺🙍🏽‍♀️", c:"English movie"},
+  {t:"How to Train Your Dragon", e:"🧑🏽‍🏫🐲", c:"English movie"},
+  {t:"Kung Fu Panda", e:"🐼🥋🐅🐍🙈🦢🐰🐢", c:"English movie"},
+  {t:"Kung Fu Panda 2", e:"🐼🥋🐅🐍🙈🦢🐰🐢🦚", c:"English movie"},
+  {t:"Kung Fu Panda 3", e:"🦸🎬🧸🌟🐂🐂", c:"English movie"},
+  {t:"The Secret Life of Pets", e:"🐕🐶🐕‍🦺🐩🐈🐈‍⬛", c:"English movie"},
+  {t:"La La Land", e:"🎶🎶🏝️💃🏽🕺🏽", c:"English movie"},
+  {t:"The Sound of Music", e:"🎵🎬🌟✨", c:"English movie"},
+  {t:"Enchanted", e:"🧙🏯🧔🏽‍♂️👨🏽👨🏽‍🦰👨🏽‍🦱👵🏽👩🏽👩🏽‍🦱🧔🏽‍♀️👩🏽", c:"English movie"},
+  {t:"The Princess Diaries", e:"👑👩🏽👨🏽📕", c:"English movie"},
+  {t:"Pirates of the Caribbean", e:"🏴‍☠️⚓🚢🌊", c:"English movie"},
+
   
   /* Kannada (existing) */
   {t:"Kantara", e:"🌾🛕🕺🔥", c:"Kannada movie"},
@@ -454,7 +479,7 @@ const activeCatsRow = document.getElementById('activeCats');
 function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.random()*(i+1)|0; [a[i],a[j]]=[a[j],a[i]] } return a }
 function uniq(a){ return Array.from(new Set(a)); }
 const ALL_CATS = ["English movie","Hindi movie","Kannada movie","Telugu movie","Malayalam movie","Tamil movie"];
-const LIMITS = [10,20,30,50];
+const LIMITS = [10,20,30];
 const TIMERS = [10,12,15,20];
 
 function getFilteredList(cats){
@@ -754,3 +779,4 @@ window.addEventListener('load', ()=>{ document.getElementById('clock').textConte
 </script>
 </body>
 </html>
+
